@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Academy — Complete 26-Week Course</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #09090A; --bg2: #0D0C0F; --bg3: #111013; --bg4: #161418;
+  --border: #1E1B20; --border2: #2A2630;
+  --text: #EAE2D8; --text2: #A09888; --text3: #6A6258; --text4: #3A3830;
+  --gold: #C8A96E; --blue: #6E9CC8; --green: #6EC897; --pink: #C86E9C; --purple: #9C6EC8; --orange: #C8896E;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', Georgia, serif; min-height: 100vh; }
+
+/* LAYOUT */
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 280px; min-width: 280px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; z-index: 100; transition: transform 0.3s; }
+.main { margin-left: 280px; flex: 1; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar-header { padding: 28px 20px 20px; border-bottom: 1px solid var(--border); }
+.sidebar-logo { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
+.sidebar-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 400; color: var(--text); }
+.sidebar-progress { margin-top: 14px; }
+.sidebar-progress-track { height: 2px; background: var(--border2); border-radius: 2px; overflow: hidden; margin-bottom: 6px; }
+.sidebar-progress-fill { height: 100%; background: var(--gold); transition: width 0.4s; }
+.sidebar-progress-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--text4); display: flex; justify-content: space-between; }
+
+.phase-section { border-bottom: 1px solid var(--border); }
+.phase-heading { padding: 14px 20px 10px; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; }
+.phase-heading:hover { background: var(--bg3); }
+.phase-heading-icon { font-size: 12px; font-family: 'DM Mono', monospace; }
+.phase-heading-text { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; flex: 1; }
+.phase-heading-chevron { font-size: 8px; color: var(--text4); transition: transform 0.2s; }
+.phase-heading.open .phase-heading-chevron { transform: rotate(180deg); }
+.phase-weeks { display: none; padding-bottom: 8px; }
+.phase-heading.open + .phase-weeks { display: block; }
+
+.week-link { display: flex; align-items: center; gap: 10px; padding: 7px 20px 7px 32px; cursor: pointer; transition: background 0.15s; }
+.week-link:hover { background: var(--bg3); }
+.week-link.active { background: var(--bg4); }
+.week-link-num { width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 9px; color: var(--text4); flex-shrink: 0; transition: all 0.2s; }
+.week-link-num.done { font-size: 10px; color: var(--bg); }
+.week-link-name { font-size: 13px; color: var(--text3); line-height: 1.3; }
+.week-link.active .week-link-name { color: var(--text2); }
+
+/* MAIN CONTENT */
+.home-page { padding: 60px 48px; max-width: 900px; }
+.hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 6px; color: var(--gold); text-transform: uppercase; margin-bottom: 18px; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: clamp(40px, 5vw, 72px); font-weight: 400; line-height: 1.05; letter-spacing: -1px; color: var(--text); margin-bottom: 16px; }
+.hero-sub { font-size: 20px; color: var(--text3); font-style: italic; margin-bottom: 48px; line-height: 1.6; }
+.stats-row { display: flex; gap: 48px; flex-wrap: wrap; margin-bottom: 56px; }
+.stat { }
+.stat-val { font-family: 'DM Mono', monospace; font-size: 36px; font-weight: 300; color: var(--gold); }
+.stat-lbl { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 3px; color: var(--text4); text-transform: uppercase; margin-top: 4px; }
+
+.phases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.phase-card { border: 1px solid var(--border); border-radius: 4px; padding: 24px; cursor: pointer; transition: border-color 0.2s, background 0.2s; background: var(--bg2); }
+.phase-card:hover { background: var(--bg3); }
+.phase-card-icon { font-size: 28px; margin-bottom: 14px; font-family: 'DM Mono', monospace; }
+.phase-card-num { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+.phase-card-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 400; color: var(--text); margin-bottom: 6px; }
+.phase-card-weeks { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: var(--text4); }
+
+/* WEEK PAGE */
+.week-page { padding: 48px 48px 100px; max-width: 900px; }
+.week-breadcrumb { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text4); margin-bottom: 24px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.week-breadcrumb:hover { color: var(--text3); }
+.week-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px; }
+.week-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px); font-weight: 400; line-height: 1.1; color: var(--text); margin-bottom: 10px; }
+.week-meta { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--text4); margin-bottom: 40px; display: flex; gap: 24px; flex-wrap: wrap; }
+.week-meta span { display: flex; align-items: center; gap: 6px; }
+
+.topics-section-title { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 5px; text-transform: uppercase; color: var(--text4); margin-bottom: 16px; }
+
+.topic-cards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 40px; }
+.topic-card { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: var(--bg2); transition: border-color 0.2s; }
+.topic-card.open { border-color: var(--border2); }
+.topic-card-header { padding: 16px 20px; cursor: pointer; display: flex; align-items: center; gap: 14px; }
+.topic-card-header:hover { background: var(--bg3); }
+.topic-card-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; font-family: 'DM Mono', monospace; }
+.topic-card-name { flex: 1; font-size: 17px; color: var(--text2); }
+.topic-card.open .topic-card-name { color: var(--text); }
+.topic-card-tag { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px; padding: 3px 8px; border-radius: 20px; color: var(--bg); text-transform: uppercase; }
+.topic-card-chevron { font-size: 9px; color: var(--text4); transition: transform 0.2s; }
+.topic-card.open .topic-card-chevron { transform: rotate(180deg); }
+
+.topic-body { display: none; border-top: 1px solid var(--border); }
+.topic-card.open .topic-body { display: block; }
+.topic-content { padding: 28px 28px 32px; }
+
+.lesson-block { margin-bottom: 28px; }
+.lesson-block h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 400; color: var(--text); margin-bottom: 12px; }
+.lesson-block p { font-size: 16px; color: var(--text2); line-height: 1.8; margin-bottom: 12px; }
+.lesson-block ul { padding-left: 0; list-style: none; }
+.lesson-block ul li { font-size: 15px; color: var(--text2); line-height: 1.7; padding-left: 18px; position: relative; margin-bottom: 6px; }
+.lesson-block ul li::before { content: '—'; position: absolute; left: 0; color: var(--text4); }
+
+.callout { border-radius: 4px; padding: 16px 20px; margin: 16px 0; }
+.callout.tip { background: #6EC89715; border-left: 3px solid var(--green); }
+.callout.warn { background: #C8A96E15; border-left: 3px solid var(--gold); }
+.callout.example { background: #6E9CC815; border-left: 3px solid var(--blue); }
+.callout-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+.callout p { font-size: 14px; line-height: 1.7; margin: 0; }
+
+.formula-box { background: var(--bg4); border: 1px solid var(--border2); border-radius: 4px; padding: 16px 20px; margin: 14px 0; font-family: 'DM Mono', monospace; font-size: 14px; color: var(--gold); letter-spacing: 1px; }
+
+.quiz-section { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+.quiz-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 16px; }
+.quiz-q { font-size: 16px; color: var(--text); margin-bottom: 14px; line-height: 1.5; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt { padding: 12px 16px; border: 1px solid var(--border2); border-radius: 4px; cursor: pointer; font-size: 14px; color: var(--text2); transition: all 0.2s; background: var(--bg3); }
+.quiz-opt:hover { border-color: var(--text3); color: var(--text); }
+.quiz-opt.correct { border-color: var(--green); background: #6EC89720; color: var(--green); }
+.quiz-opt.wrong { border-color: #C86E6E; background: #C86E6E20; color: #C86E6E; }
+.quiz-feedback { margin-top: 12px; font-size: 14px; padding: 12px 16px; border-radius: 4px; display: none; line-height: 1.6; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.good { background: #6EC89715; color: var(--green); border: 1px solid #6EC89740; }
+.quiz-feedback.bad { background: #C86E6E15; color: #C86E6E; border: 1px solid #C86E6E40; }
+
+/* TASK BOX */
+.task-box { border-radius: 4px; padding: 20px 24px; margin-top: 32px; }
+.task-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px; }
+.task-text { font-size: 16px; color: var(--text); line-height: 1.7; }
+
+/* COMPLETE BTN */
+.complete-btn { margin-top: 32px; padding: 14px 32px; border-radius: 3px; border: 1px solid; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; background: transparent; }
+.complete-btn:hover { opacity: 0.8; }
+
+/* NAV ARROWS */
+.week-nav { display: flex; gap: 12px; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); }
+.nav-btn { flex: 1; padding: 14px 20px; border: 1px solid var(--border2); border-radius: 3px; background: var(--bg2); cursor: pointer; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text3); transition: all 0.2s; text-align: center; }
+.nav-btn:hover { background: var(--bg3); color: var(--text2); border-color: var(--text4); }
+
+/* MOBILE */
+.menu-toggle { display: none; position: fixed; top: 16px; left: 16px; z-index: 200; background: var(--bg2); border: 1px solid var(--border2); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 99; }
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .menu-toggle { display: block; }
+  .sidebar-overlay.show { display: block; }
+  .home-page, .week-page { padding: 60px 20px 80px; }
+  .stats-row { gap: 28px; }
+  .phases-grid { grid-template-columns: 1fr; }
+}
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="toggleSidebar()">☰ MENU</button>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="app">
+<aside class="sidebar" id="sidebar"></aside>
+<main class="main" id="main"></main>
+</div>
+
+<script>
+// ===================== DATA =====================
+const phases = [
+  {
+    id:1, title:"Foundation", sub:"Weeks 1–4", color:"#C8A96E", icon:"◈",
+    weeks:[
+      { week:1, title:"How Markets Work", hours:8,
+        task:"Open a paper trading account on Thinkorswim or Webull and place your first fake trade.",
+        topics:[
+          { name:"What is the Stock Market?", tag:"Beginner", content: `
+            <div class="lesson-block">
+              <h3>The Stock Market Explained Simply</h3>
+              <p>The stock market is a marketplace where buyers and sellers trade shares of publicly listed companies. Think of it like a giant auction that runs every weekday from 9:30 AM to 4:00 PM Eastern Time.</p>
+              <p>When a company wants to raise money, it can "go public" by listing shares on a stock exchange. Each share represents a tiny ownership stake in that company. When you buy a share of Apple, you literally own a small piece of Apple Inc.</p>
+              <div class="callout tip"><div class="callout-label">Key Insight</div><p>The stock market is NOT a casino. Prices move based on the real performance and future expectations of businesses. Short-term it can be chaotic, but long-term prices follow the actual value of the underlying company.</p></div>
+              <h3>The Two Main Exchanges</h3>
+              <ul>
+                <li><strong>NYSE (New York Stock Exchange)</strong> — The world's largest stock exchange by market cap. Home to companies like Coca-Cola, JPMorgan, and ExxonMobil. Located on Wall Street.</li>
+                <li><strong>NASDAQ</strong> — Tech-heavy exchange. Home to Apple, Microsoft, Amazon, Google, Meta. Fully electronic — no trading floor.</li>
+              </ul>
+              <h3>How Prices Move</h3>
+              <p>Stock prices change based on supply and demand. If more people want to buy a stock than sell it, the price goes up. If more people want to sell, the price goes down. What drives those buying and selling decisions? Mainly: company earnings, economic conditions, news, and investor sentiment.</p>
+              <div class="callout example"><div class="callout-label">Real Example</div><p>When Apple reports record iPhone sales, investors get excited and want to buy more Apple shares. More buyers = higher price. When a company misses its earnings expectations, investors sell = lower price.</p></div>
+            </div>
+          `, quiz:{ q:"What does owning a stock actually mean?", opts:["You are lending money to a company","You own a small piece of that company","You have the right to work at the company","You are guaranteed a fixed return"], correct:1, explanation:"A stock (also called a share or equity) represents actual ownership in a company. Shareholders are part-owners of the business." }},
+
+          { name:"Stocks, Bonds, ETFs & Mutual Funds", tag:"Beginner", content:`
+            <div class="lesson-block">
+              <h3>The 4 Main Investment Types</h3>
+              <p>Before you invest a single euro, you need to understand the basic building blocks of investing:</p>
+              <h3>1. Stocks (Equities)</h3>
+              <p>Ownership in a company. High potential returns but higher risk. Value goes up and down with company performance.</p>
+              <div class="callout example"><div class="callout-label">Example</div><p>You buy 10 shares of ASML at €800 each = €8,000 invested. If ASML rises to €1,000, your investment is worth €10,000 (+25%).</p></div>
+              <h3>2. Bonds (Fixed Income)</h3>
+              <p>You lend money to a company or government in exchange for regular interest payments. Lower risk than stocks, but also lower returns. When interest rates rise, bond prices fall.</p>
+              <h3>3. ETFs (Exchange-Traded Funds)</h3>
+              <p>A basket of many stocks bundled together that trades on an exchange like a single stock. The S&P 500 ETF (SPY) holds 500 different companies. Great for beginners — instant diversification at low cost.</p>
+              <div class="callout tip"><div class="callout-label">Best for Beginners</div><p>A simple S&P 500 ETF like VWRL or SPY has outperformed 90%+ of professional fund managers over 20 years. Consider making index ETFs the foundation of your portfolio.</p></div>
+              <h3>4. Mutual Funds</h3>
+              <p>Similar to ETFs but actively managed by a fund manager. Usually higher fees. Priced once per day (not continuously like ETFs). Most underperform their benchmark index after fees.</p>
+              <h3>Quick Comparison</h3>
+              <ul>
+                <li>Stocks → high risk, high reward, requires research</li>
+                <li>Bonds → low risk, steady income, good for balance</li>
+                <li>ETFs → diversified, low cost, great starting point</li>
+                <li>Mutual Funds → convenient but expensive, mostly underperform</li>
+              </ul>
+            </div>
+          `, quiz:{ q:"What is the main advantage of an ETF over buying individual stocks?", opts:["ETFs always go up in value","ETFs give you instant diversification across many companies","ETFs pay guaranteed dividends","ETFs have no fees"], correct:1, explanation:"ETFs hold a basket of many stocks, so you're automatically diversified. If one company in the ETF collapses, it barely affects your total investment." }},
+
+          { name:"Bull & Bear Markets", tag:"Beginner", content:`
+            <div class="lesson-block">
+              <h3>Bull Markets</h3>
+              <p>A bull market is a period of rising stock prices — typically defined as a 20%+ rise from recent lows. Bull markets are driven by strong economic growth, rising corporate profits, and investor optimism. They can last years.</p>
+              <div class="callout example"><div class="callout-label">Historical Example</div><p>The bull market from 2009 to 2020 was the longest in US history — over 11 years of mostly rising prices following the 2008 financial crisis.</p></div>
+              <h3>Bear Markets</h3>
+              <p>A bear market is a decline of 20% or more from recent highs. They are caused by recessions, financial crises, rising interest rates, or extreme pessimism. Bear markets are painful but historically temporary.</p>
+              <div class="callout warn"><div class="callout-label">Important</div><p>The average bear market lasts about 9-16 months. The average bull market lasts 4-5 years. This is why long-term investors stay invested — the ups last longer than the downs.</p></div>
+              <h3>Market Cycles</h3>
+              <p>Markets move in cycles: Expansion → Peak → Contraction → Trough → Recovery. Understanding where we are in the cycle helps you make better decisions about risk exposure.</p>
+              <h3>Corrections vs Crashes</h3>
+              <ul>
+                <li><strong>Correction:</strong> 10–20% decline. Normal. Happens every 1-2 years on average.</li>
+                <li><strong>Bear Market:</strong> 20%+ decline. More serious. Happens every 3-5 years.</li>
+                <li><strong>Crash:</strong> Sudden, severe drop (30%+ in weeks). Rare but dramatic (2008, 2020 COVID).</li>
+              </ul>
+            </div>
+          `, quiz:{ q:"How is a bear market officially defined?", opts:["Any day the market goes down","A decline of 5% from recent highs","A decline of 20% or more from recent highs","When interest rates rise"], correct:2, explanation:"A bear market is officially defined as a decline of 20% or more from recent highs, sustained over time. A single bad day or week does not constitute a bear market." }},
+
+          { name:"How to Read a Stock Ticker", tag:"Beginner", content:`
+            <div class="lesson-block">
+              <h3>What Is a Stock Ticker?</h3>
+              <p>A stock ticker is a short symbol used to identify a publicly listed company. Every stock has a unique ticker.</p>
+              <ul>
+                <li>AAPL = Apple Inc.</li>
+                <li>MSFT = Microsoft</li>
+                <li>AMZN = Amazon</li>
+                <li>TSLA = Tesla</li>
+                <li>ASML = ASML Holding (Dutch, also on NASDAQ)</li>
+              </ul>
+              <h3>Reading a Stock Quote</h3>
+              <p>When you look up a stock, you'll see these key numbers:</p>
+              <ul>
+                <li><strong>Price:</strong> The current price per share</li>
+                <li><strong>Change:</strong> How much it moved today (e.g. +2.34 / +1.2%)</li>
+                <li><strong>Open:</strong> Price at the start of today's trading session</li>
+                <li><strong>High / Low:</strong> Highest and lowest prices today</li>
+                <li><strong>52-Week High/Low:</strong> Range over the past year</li>
+                <li><strong>Volume:</strong> How many shares have been traded today</li>
+                <li><strong>Market Cap:</strong> Total value of the company (Price × Total Shares)</li>
+              </ul>
+              <div class="callout example"><div class="callout-label">Example Quote: ASML</div><p>Price: €920 | Change: +€15 (+1.7%) | Open: €905 | High: €925 | Low: €900 | Volume: 1.2M | Market Cap: €365B</p></div>
+              <h3>What Is Volume?</h3>
+              <p>Volume tells you how many shares were traded. High volume on a price move confirms the move is real. Low volume moves are less reliable — they can reverse easily.</p>
+              <div class="formula-box">Market Cap = Share Price × Total Shares Outstanding</div>
+            </div>
+          `, quiz:{ q:"A stock's volume is very low during a price spike. What does this suggest?", opts:["The move is very reliable","The move may not be sustainable — low conviction","The company is doing very well","You should immediately buy"], correct:1, explanation:"Low volume on a price move means few participants are involved. This reduces the reliability of the move. High volume confirms that many traders/investors are behind a move, making it more meaningful." }},
+
+          { name:"Opening a Brokerage Account", tag:"Practical", content:`
+            <div class="lesson-block">
+              <h3>What Is a Brokerage?</h3>
+              <p>A brokerage is a platform that lets you buy and sell stocks, ETFs, and other investments. Without one, you can't participate in the market.</p>
+              <h3>Best Brokers for Beginners (Europe/NL)</h3>
+              <ul>
+                <li><strong>DEGIRO</strong> — Dutch broker, very low fees, great for European investors. Excellent for ETF investing.</li>
+                <li><strong>Trading 212</strong> — Commission-free trading, fractional shares, good app. UK/Europe.</li>
+                <li><strong>Interactive Brokers</strong> — Professional-grade, low fees, access to all global markets. Best for serious traders.</li>
+                <li><strong>Flatex</strong> — Popular in Netherlands/Germany, affordable.</li>
+              </ul>
+              <h3>Paper Trading (Practice First!)</h3>
+              <p>Before risking real money, use a paper trading account. This simulates real trading with fake money so you can practice without losing anything.</p>
+              <div class="callout tip"><div class="callout-label">Recommended Practice Platform</div><p>Download the Thinkorswim app (by TD Ameritrade) or use Webull — both offer free paper trading accounts. Practice here for at least 2–3 months before going live with real money.</p></div>
+              <h3>What to Look For in a Broker</h3>
+              <ul>
+                <li>Low or zero trading fees</li>
+                <li>Regulated by a reputable authority (AFM in NL, FCA in UK, SEC in US)</li>
+                <li>Good mobile app and desktop platform</li>
+                <li>Access to the markets you want (US stocks, EU stocks, ETFs)</li>
+                <li>Investor protection (your money should be protected up to €20,000 under EU rules)</li>
+              </ul>
+              <div class="callout warn"><div class="callout-label">Warning</div><p>Avoid any broker offering extremely high leverage or promising guaranteed returns. These are often scams or very high-risk CFD platforms.</p></div>
+            </div>
+          `, quiz:{ q:"What is the main purpose of paper trading?", opts:["To make real profits without risk","To practice trading strategies using fake money before risking real capital","To earn experience points in a trading game","To avoid paying taxes"], correct:1, explanation:"Paper trading lets you practice in real market conditions with fake money. It's the safest way to test strategies and get comfortable with a platform before using real capital." }},
+        ]
+      },
+      { week:2, title:"Order Types & Market Mechanics", hours:8,
+        task:"Place 10 different order types on your paper trading account. Try a market order, limit order, and stop-loss on the same stock.",
+        topics:[
+          { name:"Market Orders vs Limit Orders", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>Market Orders</h3>
+              <p>A market order buys or sells a stock immediately at whatever the current best available price is. It guarantees execution but NOT a specific price.</p>
+              <div class="callout warn"><div class="callout-label">Caution</div><p>In fast-moving or illiquid markets, you might pay more (or sell for less) than expected. This is called "slippage." For large orders or thinly traded stocks, use limit orders instead.</p></div>
+              <h3>Limit Orders</h3>
+              <p>A limit order lets you set the maximum price you're willing to pay (buy limit) or minimum price you'll accept (sell limit). It only executes if the price reaches your target.</p>
+              <div class="callout example"><div class="callout-label">Example</div><p>Stock is trading at €50. You set a buy limit at €48. Your order only fills if the stock drops to €48 or lower. You won't accidentally pay €51 during a spike.</p></div>
+              <h3>When to Use Each</h3>
+              <ul>
+                <li>Market order → When you need to get in/out immediately and price isn't critical</li>
+                <li>Limit order → When price matters and you can wait for your level</li>
+                <li>For most trades → Use limit orders. They give you price control.</li>
+              </ul>
+            </div>
+          `, quiz:{ q:"You want to buy a stock but only if it drops to €45. What order do you place?", opts:["Market buy order","Limit buy order at €45","Stop order at €45","Short sell order"], correct:1, explanation:"A limit buy order lets you specify the exact price you want to pay. Your order will only fill at €45 or lower — never higher." }},
+
+          { name:"Stop Orders & Stop-Limit Orders", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>Stop Orders (Stop-Loss)</h3>
+              <p>A stop order becomes a market order when the price hits your stop price. Used primarily as a stop-loss — to automatically exit a losing trade before it gets worse.</p>
+              <div class="callout example"><div class="callout-label">Example</div><p>You buy a stock at €100. You place a stop order at €90. If the stock falls to €90, your stop triggers and sells at market price. You've limited your loss to approximately €10.</p></div>
+              <h3>Stop-Limit Orders</h3>
+              <p>A stop-limit order becomes a LIMIT order (not a market order) when triggered. It gives you price control but risks not being filled if the stock gaps past your limit.</p>
+              <h3>The Key Difference</h3>
+              <ul>
+                <li>Stop (market): Guaranteed exit, but price may be worse than expected in a fast drop</li>
+                <li>Stop-limit: Price controlled, but might not fill if stock gaps down sharply</li>
+              </ul>
+              <div class="callout warn"><div class="callout-label">Important</div><p>In a market crash or earnings gap-down, a stop order might fill far below your stop price. This is called a "gap through." Stop-limits protect against this but risk not filling at all.</p></div>
+              <h3>Why Stop-Losses Are Vital</h3>
+              <p>Without a stop-loss, a losing trade can turn catastrophic. Professional traders ALWAYS define their maximum loss before entering a trade. Never enter a trade without knowing exactly where you'll exit if wrong.</p>
+            </div>
+          `, quiz:{ q:"You own a stock at €80 and place a stop-loss at €72. The stock gaps down overnight to €65 and opens at €65. At what price does your stop-market order fill?", opts:["€72 exactly","€80 (your entry price)","Around €65 (market price at open)","The order won't fill"], correct:2, explanation:"A stop (market) order triggers at your stop price (€72) but then executes at the next available market price. If the stock gapped to €65, your order fills around €65 — below your stop. This is called gap risk." }},
+
+          { name:"Bid, Ask & The Spread", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>Bid Price</h3>
+              <p>The bid is the highest price a buyer is currently willing to pay for a stock. If you want to sell immediately, you'll sell at the bid.</p>
+              <h3>Ask Price</h3>
+              <p>The ask (or offer) is the lowest price a seller is currently willing to accept. If you want to buy immediately, you'll buy at the ask.</p>
+              <h3>The Spread</h3>
+              <p>The spread is the difference between bid and ask. It's a hidden cost of trading — you pay it every time you enter and exit a position.</p>
+              <div class="formula-box">Spread = Ask Price − Bid Price</div>
+              <div class="callout example"><div class="callout-label">Example</div><p>Bid: €99.95 | Ask: €100.05 | Spread: €0.10. If you buy at €100.05 and immediately sell, you'd get €99.95 — a €0.10 loss just from the spread.</p></div>
+              <h3>Why Spreads Matter</h3>
+              <ul>
+                <li>Large-cap liquid stocks (AAPL, MSFT): Very tight spreads (€0.01–€0.05)</li>
+                <li>Small-cap illiquid stocks: Wide spreads (€0.50–€2+) — very costly to trade</li>
+                <li>For day traders: Spreads eat into profits significantly. Stick to liquid stocks.</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">Pro Tip</div><p>Always check the spread before trading a stock. A spread of 1% of the stock price means you need a 1% move just to break even. Stick to stocks with tight spreads (large-cap, high volume).</p></div>
+            </div>
+          `, quiz:{ q:"A stock has a bid of €50.00 and ask of €50.50. What is the spread?", opts:["€0.25","€0.50","€50.00","€1.00"], correct:1, explanation:"Spread = Ask - Bid = €50.50 - €50.00 = €0.50. This means you immediately 'lose' €0.50 per share just by entering the trade at market price." }},
+
+          { name:"Long vs Short Positions", tag:"Intermediate", content:`
+            <div class="lesson-block">
+              <h3>Going Long</h3>
+              <p>Going long simply means buying a stock expecting the price to rise. You profit when price goes up. This is what most investors do — buy and hold.</p>
+              <div class="callout example"><div class="callout-label">Long Example</div><p>Buy 100 shares at €50. Price rises to €70. You sell. Profit = €20 × 100 = €2,000.</p></div>
+              <h3>Going Short (Short Selling)</h3>
+              <p>Going short means BORROWING shares from your broker, selling them immediately, and hoping to buy them back cheaper later. You profit when price falls.</p>
+              <div class="callout example"><div class="callout-label">Short Example</div><p>Borrow and sell 100 shares at €50. Price drops to €30. You buy back at €30. Profit = €20 × 100 = €2,000.</p></div>
+              <div class="callout warn"><div class="callout-label">Risk Warning</div><p>Short selling has UNLIMITED risk. A long trade can only go to zero (lose 100%). A short trade can theoretically lose infinite money if the stock keeps rising. Short selling is for experienced traders only.</p></div>
+              <h3>Most Beginners: Stay Long Only</h3>
+              <p>As a beginner, focus exclusively on long trades. Understand the market well before attempting short selling. Many brokers also require special approval for short selling accounts.</p>
+            </div>
+          `, quiz:{ q:"What is the maximum possible loss when short selling a stock?", opts:["The amount you invested","100% of your investment","Unlimited — the stock can keep rising","The spread cost only"], correct:2, explanation:"When short selling, you profit if the stock falls. But if it rises, your losses have no ceiling — the stock could keep rising indefinitely. This is why short selling is dangerous for beginners." }},
+        ]
+      },
+      { week:3, title:"Reading Financial Statements", hours:10,
+        task:"Go to SEC EDGAR (sec.gov/edgar) and find Apple's most recent 10-K annual report. Read the income statement and write down the key numbers.",
+        topics:[
+          { name:"The Income Statement", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>What the Income Statement Shows</h3>
+              <p>The income statement shows how much money a company made and spent over a period (quarterly or annually). It answers: Is this company profitable?</p>
+              <h3>Key Lines You Must Understand</h3>
+              <ul>
+                <li><strong>Revenue (Top Line):</strong> Total money earned from sales. The starting point.</li>
+                <li><strong>Gross Profit:</strong> Revenue minus Cost of Goods Sold (COGS). Shows if the core product is profitable.</li>
+                <li><strong>Operating Income (EBIT):</strong> Gross profit minus operating expenses. Shows if the business itself is profitable before taxes and debt.</li>
+                <li><strong>Net Income (Bottom Line):</strong> What's left after ALL expenses including taxes. The ultimate measure of profitability.</li>
+                <li><strong>EPS (Earnings Per Share):</strong> Net income divided by shares outstanding. Lets you compare companies of different sizes.</li>
+              </ul>
+              <div class="formula-box">EPS = Net Income ÷ Total Shares Outstanding</div>
+              <div class="callout example"><div class="callout-label">Apple FY2023 Example</div><p>Revenue: $383B | Gross Profit: $170B | Net Income: $97B | EPS: $6.13. Apple made $97 billion in profit on $383 billion in sales — a 25% profit margin.</p></div>
+              <h3>What to Look For</h3>
+              <ul>
+                <li>Is revenue growing year over year?</li>
+                <li>Are profit margins expanding or shrinking?</li>
+                <li>Is EPS growing consistently?</li>
+              </ul>
+            </div>
+          `, quiz:{ q:"What does EPS (Earnings Per Share) tell you?", opts:["The total revenue of the company","The profit attributed to each outstanding share","The stock price divided by revenue","The number of shares being sold"], correct:1, explanation:"EPS = Net Income / Shares Outstanding. It tells you how much profit the company earned per share. Higher and growing EPS generally signals a healthy, profitable company." }},
+
+          { name:"The Balance Sheet", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>What the Balance Sheet Shows</h3>
+              <p>The balance sheet is a snapshot of what a company owns (assets), what it owes (liabilities), and what belongs to shareholders (equity) at a specific point in time.</p>
+              <div class="formula-box">Assets = Liabilities + Shareholders' Equity</div>
+              <h3>Assets</h3>
+              <ul>
+                <li><strong>Current Assets:</strong> Cash, accounts receivable, inventory — things convertible to cash within a year</li>
+                <li><strong>Long-Term Assets:</strong> Property, equipment, patents, goodwill</li>
+              </ul>
+              <h3>Liabilities</h3>
+              <ul>
+                <li><strong>Current Liabilities:</strong> Bills due within a year (accounts payable, short-term debt)</li>
+                <li><strong>Long-Term Liabilities:</strong> Long-term debt, pension obligations</li>
+              </ul>
+              <h3>Key Ratios from the Balance Sheet</h3>
+              <div class="formula-box">Debt-to-Equity = Total Debt ÷ Shareholders' Equity</div>
+              <p>A low debt-to-equity ratio generally means a more financially stable company. High debt is risky — if sales drop, the company still owes the same interest payments.</p>
+              <div class="callout tip"><div class="callout-label">What Investors Love</div><p>A company with a lot of cash, little debt, and growing equity is a fortress business. Warren Buffett specifically looks for companies with strong balance sheets that can survive any economic storm.</p></div>
+            </div>
+          `, quiz:{ q:"The accounting equation is: Assets = ?", opts:["Revenue + Expenses","Liabilities + Shareholders' Equity","Net Income + Dividends","Cash + Inventory"], correct:1, explanation:"The fundamental accounting equation is Assets = Liabilities + Shareholders' Equity. This always balances — hence the name 'balance sheet.'" }},
+
+          { name:"Key Valuation Ratios", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>P/E Ratio (Price-to-Earnings)</h3>
+              <p>The most widely used valuation metric. It tells you how much you're paying for each dollar/euro of earnings.</p>
+              <div class="formula-box">P/E = Stock Price ÷ Earnings Per Share (EPS)</div>
+              <div class="callout example"><div class="callout-label">Example</div><p>Stock price: €100. EPS: €5. P/E = 20. You're paying 20× the annual earnings. A P/E of 20 means it would take 20 years of current earnings to "pay back" your investment.</p></div>
+              <h3>What's a Good P/E?</h3>
+              <ul>
+                <li>S&P 500 historical average: ~15-18x</li>
+                <li>Value stocks: 8-15x (cheap, often slower growth)</li>
+                <li>Growth stocks: 25-60x (expensive, but growing fast)</li>
+                <li>High P/E is only justified if earnings are growing rapidly</li>
+              </ul>
+              <h3>Other Key Ratios</h3>
+              <ul>
+                <li><strong>P/B (Price-to-Book):</strong> Price vs book value of assets. Below 1 means trading below asset value — potentially cheap.</li>
+                <li><strong>P/S (Price-to-Sales):</strong> Useful for companies not yet profitable (startups, biotech).</li>
+                <li><strong>PEG Ratio:</strong> P/E divided by earnings growth rate. Below 1.0 generally signals undervalued growth stock.</li>
+              </ul>
+              <div class="formula-box">PEG = P/E Ratio ÷ Annual EPS Growth Rate</div>
+              <div class="callout warn"><div class="callout-label">Don't Use Ratios in Isolation</div><p>Never buy or sell based on a single ratio. A low P/E can mean a company is cheap OR that it's in trouble. Always look at multiple metrics together.</p></div>
+            </div>
+          `, quiz:{ q:"A stock has a P/E of 30 and earnings are growing at 30% per year. What is the PEG ratio?", opts:["1.0","0.5","30","3.0"], correct:0, explanation:"PEG = P/E ÷ Growth Rate = 30 ÷ 30 = 1.0. A PEG of 1.0 is considered fairly valued. Below 1.0 is generally seen as undervalued for a growth stock." }},
+        ]
+      },
+      { week:4, title:"Risk Management Fundamentals", hours:8,
+        task:"Build a simple position sizing spreadsheet. Given a €10,000 account risking 1% per trade with a stop-loss 5% below entry — how many shares can you buy at €50?",
+        topics:[
+          { name:"The 1-2% Rule", tag:"Critical", content:`
+            <div class="lesson-block">
+              <h3>The Most Important Rule in Trading</h3>
+              <p>Never risk more than 1-2% of your total trading account on any single trade. This one rule separates traders who survive long-term from those who blow up their accounts.</p>
+              <div class="callout example"><div class="callout-label">Example</div><p>Account size: €10,000. Max risk per trade (1%): €100. If you buy a stock at €50 with a stop-loss at €45 (€5 risk per share), you can buy maximum 20 shares (€100 ÷ €5 = 20 shares).</p></div>
+              <h3>Why This Rule Works</h3>
+              <p>Even with 10 consecutive losses (very unlikely with a good strategy), you'd only be down 10% of your account. You stay in the game long enough to recover and improve.</p>
+              <div class="callout warn"><div class="callout-label">What Beginners Do Wrong</div><p>Beginners often risk 10-20% on a single trade because they're "sure" about it. A few of these losses wipes out the account. The market will humble anyone who ignores risk management.</p></div>
+              <h3>The Position Sizing Formula</h3>
+              <div class="formula-box">
+                Max Risk = Account Size × Risk % (e.g. 1%)<br>
+                Risk Per Share = Entry Price − Stop-Loss Price<br>
+                Position Size (shares) = Max Risk ÷ Risk Per Share
+              </div>
+            </div>
+          `, quiz:{ q:"Your account is €20,000 and you risk 2% per trade. Your stop-loss is €4 below your entry. How many shares can you buy?", opts:["100 shares","200 shares","400 shares","50 shares"], correct:0, explanation:"Max risk = €20,000 × 2% = €400. Risk per share = €4. Shares = €400 ÷ €4 = 100 shares. This keeps your maximum loss on this trade to €400." }},
+
+          { name:"Risk/Reward Ratio", tag:"Critical", content:`
+            <div class="lesson-block">
+              <h3>What Is Risk/Reward?</h3>
+              <p>The risk/reward ratio compares how much you could lose versus how much you could gain on a trade. A 1:2 ratio means for every €1 you risk, you aim to make €2.</p>
+              <div class="formula-box">R/R Ratio = Potential Profit ÷ Potential Loss</div>
+              <div class="callout example"><div class="callout-label">Example</div><p>Buy at €50. Stop-loss at €46 (risk: €4). Target at €58 (reward: €8). R/R = 8÷4 = 2:1. For every €1 you risk, you target €2 in profit.</p></div>
+              <h3>Why Only Take 2:1 or Better Trades</h3>
+              <p>Even if you're only right 40% of the time with a 2:1 R/R, you're still profitable:</p>
+              <ul>
+                <li>10 trades: 4 winners × €200 = €800 profit</li>
+                <li>6 losers × €100 = −€600 loss</li>
+                <li>Net: +€200 profit with only 40% win rate!</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">Golden Rule</div><p>Never enter a trade where the potential reward is less than 2× your potential risk. Skipping low R/R trades is one of the biggest edges you can give yourself.</p></div>
+              <h3>Win Rate vs R/R</h3>
+              <p>You don't need to be right most of the time to be profitable. A 33% win rate is profitable with a 3:1 R/R. Focus on finding good setups, not on being "right."</p>
+            </div>
+          `, quiz:{ q:"You have a 2:1 risk/reward and win 40% of the time. Over 10 trades risking €100 each, what is your net profit?", opts:["−€200","€0","+€200","+€800"], correct:2, explanation:"Wins: 4 × €200 = €800. Losses: 6 × €100 = −€600. Net = €800 − €600 = +€200 profit, despite only winning 40% of trades. Good R/R makes profitability possible even with a sub-50% win rate." }},
+
+          { name:"Diversification & Correlation", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>What Is Diversification?</h3>
+              <p>Diversification means spreading your money across different investments so one bad outcome doesn't destroy your portfolio.</p>
+              <h3>Types of Diversification</h3>
+              <ul>
+                <li><strong>Across stocks:</strong> Don't put 100% in one company</li>
+                <li><strong>Across sectors:</strong> Mix tech, healthcare, energy, financials</li>
+                <li><strong>Across asset classes:</strong> Stocks + bonds + cash</li>
+                <li><strong>Across geographies:</strong> US + Europe + Emerging markets</li>
+              </ul>
+              <h3>Correlation</h3>
+              <p>Correlation measures how two assets move in relation to each other. If two stocks always move together, owning both doesn't actually diversify you.</p>
+              <div class="callout example"><div class="callout-label">Example</div><p>Owning 10 different tech stocks (Apple, Microsoft, Google, Meta, etc.) looks diversified but they're highly correlated — they all tend to fall together in a tech sector downturn. True diversification means owning different TYPES of assets.</p></div>
+              <div class="callout warn"><div class="callout-label">Over-diversification</div><p>Owning 50+ stocks doesn't necessarily reduce risk much more than owning 15-20, but it dilutes your returns. Most professional investors say 15-25 stocks in different sectors is optimal for individual stock portfolios.</p></div>
+            </div>
+          `, quiz:{ q:"You own 10 different tech company stocks. Are you well diversified?", opts:["Yes — 10 stocks is excellent diversification","No — highly correlated stocks in the same sector don't provide true diversification","Yes — as long as each stock is from a different company","No — you need at least 100 stocks to be diversified"], correct:1, explanation:"Diversification requires owning assets that don't all move together. 10 tech stocks are highly correlated — they tend to rise and fall at the same time. True diversification means mixing sectors and asset classes." }},
+        ]
+      },
+    ]
+  },
+  {
+    id:2, title:"Technical Analysis", sub:"Weeks 5–9", color:"#6E9CC8", icon:"◉",
+    weeks:[
+      { week:5, title:"Reading Price Charts", hours:10,
+        task:"Open TradingView (free). Find 3 different stocks. Draw support and resistance lines on each. Identify at least one trend.",
+        topics:[
+          { name:"Candlestick Charts", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>Why Candlestick Charts?</h3>
+              <p>Candlestick charts show 4 pieces of information for each time period: Open, High, Low, and Close (OHLC). They give a much richer picture than simple line charts.</p>
+              <h3>Anatomy of a Candlestick</h3>
+              <ul>
+                <li><strong>Body:</strong> The rectangle between Open and Close</li>
+                <li><strong>Wick/Shadow:</strong> The thin lines above/below showing High and Low</li>
+                <li><strong>Green/White candle:</strong> Close was HIGHER than Open (buyers won)</li>
+                <li><strong>Red/Black candle:</strong> Close was LOWER than Open (sellers won)</li>
+              </ul>
+              <h3>Key Single Candle Patterns</h3>
+              <ul>
+                <li><strong>Doji:</strong> Open and close almost equal. Indecision. Watch for what follows.</li>
+                <li><strong>Hammer:</strong> Small body, long lower wick. Rejection of lower prices. Bullish at support.</li>
+                <li><strong>Shooting Star:</strong> Small body, long upper wick. Rejection of higher prices. Bearish at resistance.</li>
+                <li><strong>Marubozu:</strong> No wicks — pure buying or selling pressure all session.</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">Context Matters Most</div><p>A hammer at a major support level after a strong downtrend is a powerful signal. The same hammer in the middle of nowhere is meaningless. Always interpret candles in context.</p></div>
+            </div>
+          `, quiz:{ q:"A green candlestick means:", opts:["The stock went up all day without any selling","The closing price was higher than the opening price","The stock hit a new all-time high","Volume was above average"], correct:1, explanation:"A green (bullish) candle simply means the stock closed higher than it opened during that time period. It tells you buyers had more control than sellers during that session." }},
+
+          { name:"Support & Resistance", tag:"Critical", content:`
+            <div class="lesson-block">
+              <h3>Support Levels</h3>
+              <p>Support is a price level where buying interest is strong enough to prevent the price from falling further. Think of it as a floor — the price bounces up off it repeatedly.</p>
+              <h3>Resistance Levels</h3>
+              <p>Resistance is a price level where selling pressure is strong enough to prevent the price from rising further. Think of it as a ceiling — the price gets rejected down from it.</p>
+              <div class="callout example"><div class="callout-label">Why Do These Levels Exist?</div><p>Traders have memories. If a stock bounced at €50 three times before, thousands of traders will set buy orders at €50 next time it approaches there — creating a self-fulfilling support level.</p></div>
+              <h3>Support Becomes Resistance (and Vice Versa)</h3>
+              <p>Once a support level is broken (price closes below it), it often becomes a new resistance level. This "role reversal" is one of the most powerful concepts in technical analysis.</p>
+              <div class="callout tip"><div class="callout-label">How to Draw Levels</div><p>Look for areas where price reversed multiple times. The more times a level has been tested, the more significant it is. Draw lines at the BODY of candles, not the wicks, for cleaner levels.</p></div>
+              <h3>Trading with Support & Resistance</h3>
+              <ul>
+                <li>Buy near support, with stop-loss below support</li>
+                <li>Sell/take profit near resistance</li>
+                <li>Look for breakouts above resistance — potential for big moves</li>
+              </ul>
+            </div>
+          `, quiz:{ q:"A stock breaks BELOW a previous support level and then rises back to that level. How should you expect the level to behave now?", opts:["It acts as support again","It now acts as resistance — the old support becomes a ceiling","The level is irrelevant now","The stock will immediately continue falling"], correct:1, explanation:"When support is broken, it typically becomes resistance. This is called 'role reversal.' Traders who bought at that level are now trapped at a loss and will sell (creating resistance) when price returns to their entry level." }},
+
+          { name:"Trend Lines & Trend Trading", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>The Trend Is Your Friend</h3>
+              <p>The most fundamental principle of technical analysis: trade in the direction of the trend. Trying to fight the trend is one of the most common ways traders lose money.</p>
+              <h3>Drawing Trend Lines</h3>
+              <ul>
+                <li><strong>Uptrend line:</strong> Connect two or more higher lows. Price should stay above this line in an uptrend.</li>
+                <li><strong>Downtrend line:</strong> Connect two or more lower highs. Price should stay below in a downtrend.</li>
+                <li>A valid trend line needs at least 2 touches. Three touches makes it highly significant.</li>
+              </ul>
+              <h3>Types of Trends</h3>
+              <ul>
+                <li><strong>Uptrend:</strong> Series of higher highs AND higher lows</li>
+                <li><strong>Downtrend:</strong> Series of lower highs AND lower lows</li>
+                <li><strong>Sideways/Ranging:</strong> Price oscillates between horizontal support and resistance</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">How to Trade Trends</div><p>In an uptrend, look for pullbacks to the trend line or moving averages to buy. In a downtrend, wait for a trend reversal signal before buying. Never try to catch a falling knife — wait for evidence the downtrend has ended.</p></div>
+              <h3>Trend Strength</h3>
+              <p>A steep trend is unsustainable — it will either break or slow. A moderate, steady trend with regular pullbacks is the healthiest and most tradeable type.</p>
+            </div>
+          `, quiz:{ q:"What defines an uptrend in technical analysis?", opts:["The stock is above its 200-day moving average","A series of higher highs AND higher lows","The stock went up more than 20% this year","Volume is increasing"], correct:1, explanation:"An uptrend is technically defined as a series of higher highs (each rally goes higher than the last) AND higher lows (each pullback stops higher than the previous one). Both conditions must be true." }},
+        ]
+      },
+      { week:6, title:"Chart Patterns", hours:10,
+        task:"Use TradingView to scan 20 different charts. Find and screenshot at least 3 different chart patterns. Note what happened after each pattern.",
+        topics:[
+          { name:"Breakout Patterns (Flags & Triangles)", tag:"Intermediate", content:`
+            <div class="lesson-block">
+              <h3>Bull Flag</h3>
+              <p>A bull flag forms after a sharp, strong move up (the flagpole), followed by a tight, sideways or slightly downward consolidation (the flag). The flag looks like a small rectangle or channel. Breakout above the flag = continuation upward.</p>
+              <div class="callout example"><div class="callout-label">Trading a Bull Flag</div><p>Wait for price to break above the upper boundary of the flag on increased volume. Enter at breakout. Stop-loss just below the flag low. Target = flagpole height added to breakout point.</p></div>
+              <h3>Ascending Triangle</h3>
+              <p>Flat resistance on top, rising support line below. Buyers are getting more aggressive — each low is higher. Usually resolves with a breakout UPWARD through the flat resistance.</p>
+              <h3>Descending Triangle</h3>
+              <p>Flat support on bottom, declining resistance on top. Sellers are more aggressive. Usually resolves with a breakdown DOWNWARD through the flat support.</p>
+              <h3>Symmetrical Triangle</h3>
+              <p>Converging trend lines — lower highs and higher lows. A coiling spring. Can break either direction — wait for the breakout to determine which way to trade it. Breakout direction often continues the prior trend.</p>
+              <div class="callout tip"><div class="callout-label">Volume Is Key</div><p>A breakout on HIGH volume is much more reliable than one on low volume. Always wait for volume confirmation before entering a breakout trade.</p></div>
+            </div>
+          `, quiz:{ q:"A stock has a sharp 30% move up, then consolidates sideways for 2 weeks in a tight range. What pattern is forming?", opts:["Head and shoulders","Double top","Bull flag","Descending triangle"], correct:2, explanation:"A sharp upward move (flagpole) followed by a tight sideways/slightly down consolidation (flag) is a classic bull flag pattern — a continuation pattern that often leads to another move upward." }},
+
+          { name:"Reversal Patterns", tag:"Intermediate", content:`
+            <div class="lesson-block">
+              <h3>Head & Shoulders (Bearish Reversal)</h3>
+              <p>One of the most reliable reversal patterns. Forms at the top of an uptrend.</p>
+              <ul>
+                <li><strong>Left Shoulder:</strong> Rally and pullback</li>
+                <li><strong>Head:</strong> Higher rally and pullback to same area (neckline)</li>
+                <li><strong>Right Shoulder:</strong> Lower rally than head, pullback to neckline</li>
+                <li><strong>Trigger:</strong> Break below the neckline = bearish signal</li>
+              </ul>
+              <h3>Double Top (Bearish)</h3>
+              <p>Price hits a resistance level twice and fails both times. The two peaks are at roughly the same level. Break below the valley between the two peaks = bearish trigger.</p>
+              <h3>Double Bottom (Bullish)</h3>
+              <p>Price hits a support level twice and bounces both times. Break above the peak between the two bottoms = bullish trigger. Often called a "W" pattern.</p>
+              <div class="callout example"><div class="callout-label">Target for Double Bottom</div><p>Measure the height from the bottom to the neckline. Add that distance to the breakout point for your price target.</p></div>
+              <div class="callout warn"><div class="callout-label">Patience Required</div><p>Don't jump in before the pattern completes and breaks. Many traders buy the "second bottom" too early — wait for the confirmed breakout with volume before entering.</p></div>
+            </div>
+          `, quiz:{ q:"Where should you place your stop-loss when trading a head and shoulders breakdown?", opts:["Below the left shoulder","Above the right shoulder (pattern invalidation point)","Below the neckline","At the head high"], correct:1, explanation:"If you're shorting a head and shoulders breakdown, your stop-loss should go just above the right shoulder. If price moves back above the right shoulder, the pattern is invalidated." }},
+
+          { name:"Cup & Handle Pattern", tag:"Intermediate", content:`
+            <div class="lesson-block">
+              <h3>What Is the Cup & Handle?</h3>
+              <p>Developed by William O'Neil, the cup and handle is one of the most powerful bullish continuation patterns. It represents a period of consolidation and healthy "digestion" before a stock continues higher.</p>
+              <h3>The Cup</h3>
+              <p>The cup forms a rounded U-shape (not a sharp V). It should take 7-65 weeks to form. The right side of the cup should reach back to the level of the left side (prior high).</p>
+              <h3>The Handle</h3>
+              <p>After forming the cup, the stock "wedges" slightly lower in a tight, orderly pullback — the handle. Volume should dry up during the handle (weak holders exiting). The handle typically lasts 1-4 weeks.</p>
+              <h3>The Breakout</h3>
+              <p>The buy point is when the stock breaks above the handle's resistance (the high of the handle) on volume at least 40-50% above average. This is the pivot buy point.</p>
+              <div class="callout tip"><div class="callout-label">O'Neil's Key Rule</div><p>The cup depth should be no more than 30-33% in a normal bull market, 40-50% in a bear market correction. A deeper cup suggests too much selling pressure and is less reliable.</p></div>
+              <div class="callout example"><div class="callout-label">Famous Examples</div><p>Many of the greatest stock market winners in history formed cup and handle patterns before their biggest runs — including early Apple, Google, Netflix, and NVIDIA at various points in their history.</p></div>
+            </div>
+          `, quiz:{ q:"During the handle formation of a cup & handle pattern, what should volume ideally do?", opts:["Surge to new highs","Remain flat and unchanged","Dry up and decrease — showing weak selling pressure","Double from the cup formation"], correct:2, explanation:"During the handle, volume should decrease (dry up). This shows that selling pressure is light — weak holders are exiting, but big institutional buyers are not selling. The volume surge comes at the breakout." }},
+        ]
+      },
+      { week:7, title:"Technical Indicators", hours:10,
+        task:"Set up a TradingView chart with 3 indicators: 20 EMA, 50 SMA, and RSI. Find a stock where all three are giving the same signal (all bullish or all bearish).",
+        topics:[
+          { name:"Moving Averages", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>What Is a Moving Average?</h3>
+              <p>A moving average smooths out price data by creating a constantly updated average price over a set period. It filters out the "noise" and shows the underlying trend more clearly.</p>
+              <h3>SMA vs EMA</h3>
+              <ul>
+                <li><strong>SMA (Simple Moving Average):</strong> Equal weight to all periods. Slower, smoother.</li>
+                <li><strong>EMA (Exponential Moving Average):</strong> More weight to recent prices. Faster, more responsive to recent changes.</li>
+              </ul>
+              <h3>Key Moving Averages to Know</h3>
+              <ul>
+                <li><strong>20 EMA:</strong> Short-term trend. Swing traders use this as dynamic support/resistance.</li>
+                <li><strong>50 SMA:</strong> Medium-term trend. Institutional investors watch this closely.</li>
+                <li><strong>200 SMA:</strong> Long-term trend. The most watched line in all of finance. Above = bullish, below = bearish.</li>
+              </ul>
+              <h3>Golden Cross & Death Cross</h3>
+              <ul>
+                <li><strong>Golden Cross:</strong> 50 SMA crosses ABOVE 200 SMA = long-term bullish signal</li>
+                <li><strong>Death Cross:</strong> 50 SMA crosses BELOW 200 SMA = long-term bearish signal</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">Moving Average Strategy</div><p>Buy when price pulls back to the 20 EMA in an uptrend and bounces. This is one of the cleanest, simplest swing trading strategies. Stop-loss below the 50 SMA.</p></div>
+            </div>
+          `, quiz:{ q:"A stock's 50-day SMA crosses above its 200-day SMA. What is this called?", opts:["Death Cross","Golden Cross","Moving Average Convergence","Bullish Divergence"], correct:1, explanation:"When the 50-day SMA crosses above the 200-day SMA, it's called a Golden Cross — traditionally seen as a long-term bullish signal indicating improving momentum." }},
+
+          { name:"RSI — Relative Strength Index", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>What Is RSI?</h3>
+              <p>The RSI is a momentum oscillator that measures the speed and magnitude of price changes. It oscillates between 0 and 100.</p>
+              <h3>Key Levels</h3>
+              <ul>
+                <li><strong>Above 70:</strong> Overbought — stock may be due for a pullback</li>
+                <li><strong>Below 30:</strong> Oversold — stock may be due for a bounce</li>
+                <li><strong>50 level:</strong> Center line. Above 50 = bullish momentum, below 50 = bearish</li>
+              </ul>
+              <div class="callout warn"><div class="callout-label">Don't Misuse RSI</div><p>"Overbought" doesn't mean "time to sell." In a strong uptrend, RSI can stay above 70 for months. Similarly, "oversold" in a downtrend just means it's falling fast — it can keep falling.</p></div>
+              <h3>RSI Divergence (More Advanced)</h3>
+              <ul>
+                <li><strong>Bullish Divergence:</strong> Price makes a lower low BUT RSI makes a higher low. Momentum is improving — potential reversal upward.</li>
+                <li><strong>Bearish Divergence:</strong> Price makes a higher high BUT RSI makes a lower high. Momentum is weakening — potential reversal downward.</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">Best Use of RSI</div><p>Use RSI divergence to spot potential reversals. Use the 50 level as a trend filter — only take long trades when RSI is above 50, and short trades when below 50.</p></div>
+            </div>
+          `, quiz:{ q:"RSI is at 75. What does this mean?", opts:["The stock will definitely fall soon","The stock is overbought and momentum is strong — but in a strong uptrend, it can stay overbought for a long time","The stock is oversold and about to bounce","The RSI should be ignored at this level"], correct:1, explanation:"RSI above 70 signals overbought conditions, meaning momentum has been very strong. However, 'overbought' doesn't mean 'sell immediately' — in strong uptrends, RSI can stay elevated for extended periods. Context matters." }},
+
+          { name:"MACD Indicator", tag:"Intermediate", content:`
+            <div class="lesson-block">
+              <h3>What Is MACD?</h3>
+              <p>MACD (Moving Average Convergence Divergence) is a trend-following momentum indicator. It shows the relationship between two exponential moving averages and is used to identify trend changes and momentum.</p>
+              <h3>Components</h3>
+              <ul>
+                <li><strong>MACD Line:</strong> 12 EMA minus 26 EMA</li>
+                <li><strong>Signal Line:</strong> 9 EMA of the MACD line</li>
+                <li><strong>Histogram:</strong> Visual difference between MACD line and Signal line</li>
+              </ul>
+              <h3>MACD Signals</h3>
+              <ul>
+                <li><strong>Bullish Crossover:</strong> MACD line crosses ABOVE signal line = buy signal</li>
+                <li><strong>Bearish Crossover:</strong> MACD line crosses BELOW signal line = sell signal</li>
+                <li><strong>Zero Line Cross:</strong> MACD crossing above zero = bullish; below zero = bearish</li>
+              </ul>
+              <div class="callout example"><div class="callout-label">Best Use Case</div><p>MACD crossovers on the daily or weekly chart are useful for swing and position traders to confirm trend entries. The histogram growing (expanding bars) shows increasing momentum.</p></div>
+              <div class="callout warn"><div class="callout-label">Lag Warning</div><p>MACD is a lagging indicator — it tells you what already happened. Never use it alone. Combine with price action and support/resistance for better entries.</p></div>
+            </div>
+          `, quiz:{ q:"The MACD line crosses above the signal line. This is a:", opts:["Death Cross — bearish signal","Bullish crossover — potential buy signal","Confirmation that RSI is oversold","Signal that earnings will beat expectations"], correct:1, explanation:"When the MACD line crosses above the signal line, it's a bullish crossover, traditionally interpreted as a buy signal indicating upward momentum is building." }},
+        ]
+      },
+      { week:8, title:"Sector Rotation & Market Context", hours:8,
+        task:"Visit Finviz.com and look at the sector heatmap. Identify the top 3 and bottom 3 performing sectors this week. Research WHY those sectors are moving.",
+        topics:[
+          { name:"The 11 Market Sectors", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>Why Sectors Matter</h3>
+              <p>The S&P 500 is divided into 11 sectors. Different sectors perform differently at different points in the economic cycle. Knowing which sectors are leading helps you find the best stocks to trade.</p>
+              <h3>The 11 GICS Sectors</h3>
+              <ul>
+                <li><strong>Technology (XLK):</strong> Apple, Microsoft, NVIDIA — leads bull markets, falls hard in downturns</li>
+                <li><strong>Healthcare (XLV):</strong> Defensive — people need healthcare in recessions too</li>
+                <li><strong>Financials (XLF):</strong> Banks, insurance — benefits from rising interest rates</li>
+                <li><strong>Consumer Discretionary (XLY):</strong> Amazon, Tesla — does well when economy is strong</li>
+                <li><strong>Consumer Staples (XLP):</strong> Procter & Gamble, Coca-Cola — defensive, steady in recessions</li>
+                <li><strong>Energy (XLE):</strong> ExxonMobil, Chevron — tied to oil prices</li>
+                <li><strong>Industrials (XLI):</strong> Boeing, Caterpillar — economic cycle sensitive</li>
+                <li><strong>Utilities (XLU):</strong> Electricity companies — very defensive, like bonds</li>
+                <li><strong>Materials (XLB):</strong> Mining, chemicals — tied to commodity prices</li>
+                <li><strong>Real Estate (XLRE):</strong> REITs — sensitive to interest rates</li>
+                <li><strong>Communication Services (XLC):</strong> Google, Meta, Netflix</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">Sector Rotation Strategy</div><p>Find which sector is showing the strongest relative strength (rising fastest compared to S&P 500). Then find the best individual stocks within that sector. This "top-down" approach puts the odds in your favor.</p></div>
+            </div>
+          `, quiz:{ q:"During a recession, which type of sectors typically outperform?", opts:["Technology and consumer discretionary","Defensive sectors like utilities, healthcare, and consumer staples","Energy and materials","All sectors fall equally in a recession"], correct:1, explanation:"Defensive sectors (utilities, healthcare, consumer staples) tend to outperform during recessions because demand for their products/services remains relatively stable even when consumers cut spending." }},
+
+          { name:"The VIX — Fear Index", tag:"Intermediate", content:`
+            <div class="lesson-block">
+              <h3>What Is the VIX?</h3>
+              <p>The VIX (CBOE Volatility Index) measures the market's expectation of volatility over the next 30 days, derived from S&P 500 options prices. It's often called the "fear gauge" of Wall Street.</p>
+              <h3>Reading the VIX</h3>
+              <ul>
+                <li><strong>VIX below 15:</strong> Very calm. Low fear. Market is complacent. Bull market territory.</li>
+                <li><strong>VIX 15-25:</strong> Normal range. Moderate uncertainty.</li>
+                <li><strong>VIX 25-35:</strong> Elevated fear. Market stress. Can be correction territory.</li>
+                <li><strong>VIX above 40:</strong> Extreme panic. Often marks major market bottoms. (COVID 2020: VIX hit 82!)</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">Contrarian Signal</div><p>Extreme VIX spikes (above 40) often represent buying opportunities. When everyone is panicking, stocks are usually oversold. "Be fearful when others are greedy, and greedy when others are fearful." — Warren Buffett</p></div>
+              <h3>VIX and Stock Correlation</h3>
+              <p>VIX typically moves INVERSELY to the S&P 500. When stocks fall sharply, VIX spikes up. When the market is calm and rising, VIX drifts lower.</p>
+            </div>
+          `, quiz:{ q:"The VIX suddenly spikes to 45. What does this most likely indicate?", opts:["The market is at an all-time high","Extreme fear and panic — potentially a good contrarian buying opportunity","Interest rates are falling","All tech stocks are about to crash"], correct:1, explanation:"A VIX spike to 45 indicates extreme fear and panic in the market. Historically, such spikes have often marked near-term market bottoms and contrarian buying opportunities, as they reflect peak pessimism." }},
+        ]
+      },
+      { week:9, title:"Building a Trading System", hours:12,
+        task:"Write out your complete trading strategy in 1-2 pages. Define exact entry rules, stop-loss rules, profit target rules, and maximum positions at once.",
+        topics:[
+          { name:"Building Entry & Exit Rules", tag:"Critical", content:`
+            <div class="lesson-block">
+              <h3>Why You Need Written Rules</h3>
+              <p>Trading without written rules is gambling. Professional traders have a specific, documented trading plan that they follow mechanically. Emotions have no place in executing a trade plan.</p>
+              <h3>Entry Rules: What Must Be True?</h3>
+              <p>Your entry rule should be specific enough that you could explain it to someone else and they'd enter the same trade. Example of a good entry rule:</p>
+              <div class="callout example"><div class="callout-label">Example Entry Rule</div><p>"Buy when: (1) Stock is above its 50 SMA, (2) RSI is between 40-60 after a pullback from above 60, (3) Price pulls back to the 20 EMA and forms a hammer candle, (4) Volume on the hammer is below average (orderly pullback), (5) The broader market (S&P 500) is in an uptrend."</p></div>
+              <h3>Stop-Loss Rules: Where Am I Wrong?</h3>
+              <p>Define this BEFORE entering the trade. Common approaches:</p>
+              <ul>
+                <li>Below recent swing low</li>
+                <li>Below a key moving average (20 EMA, 50 SMA)</li>
+                <li>Below a chart pattern (below the handle of a cup & handle)</li>
+                <li>Fixed percentage (5-8% below entry for swing trades)</li>
+              </ul>
+              <h3>Profit Target Rules: When Do I Win?</h3>
+              <ul>
+                <li>Fixed R/R target (e.g., always aim for 2× or 3× your risk)</li>
+                <li>Resistance level (take profits at the next major resistance)</li>
+                <li>Trailing stop (move stop-loss up as price rises to lock in profits)</li>
+                <li>Partial exits (sell half at 1st target, let the rest run)</li>
+              </ul>
+            </div>
+          `, quiz:{ q:"Why should you define your stop-loss BEFORE entering a trade — not after?", opts:["Tax reasons require it","To prevent emotional decision-making when you're already in a losing position","Your broker requires it","Stop-losses only work when set before entry"], correct:1, explanation:"Setting stop-losses after entry means you'll make the decision while emotionally invested in the trade. Under pressure, you'll tend to move the stop further away ('just a bit more room') — leading to larger losses. Define it objectively before you enter." }},
+
+          { name:"Backtesting Your Strategy", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>What Is Backtesting?</h3>
+              <p>Backtesting means applying your trading rules to historical data to see how your strategy would have performed in the past. It tells you if your edge is real before risking real money.</p>
+              <h3>How to Manually Backtest</h3>
+              <ul>
+                <li>Go to TradingView. Choose a stock and time period.</li>
+                <li>Scroll back in time (use the scroll bar to go to a past date)</li>
+                <li>Apply your rules as if you're seeing the chart in real time</li>
+                <li>Record every trade: entry, stop, target, result</li>
+                <li>Calculate: win rate, average winner, average loser, total profit</li>
+              </ul>
+              <div class="formula-box">
+                Expectancy = (Win Rate × Avg Win) − (Loss Rate × Avg Loss)<br>
+                Positive expectancy = profitable strategy
+              </div>
+              <div class="callout example"><div class="callout-label">Example Backtest Result</div><p>50 trades. Win rate: 45%. Avg winner: €300. Avg loser: €150. Expectancy = (0.45×300) − (0.55×150) = 135 − 82.5 = €52.50 per trade. Positive edge confirmed.</p></div>
+              <div class="callout warn"><div class="callout-label">Curve Fitting Warning</div><p>Don't backtest until your results look perfect — this is called "overfitting" and the strategy will fail in live trading. Use a separate period (out-of-sample) to validate your results.</p></div>
+            </div>
+          `, quiz:{ q:"What does 'positive expectancy' mean in trading?", opts:["You will win more than 50% of trades","Your strategy makes money on average per trade over many trades","You will never have a losing trade","Your maximum loss is limited"], correct:1, explanation:"Positive expectancy means your strategy is profitable on average across many trades, taking into account both wins and losses. You can have a 40% win rate and still have positive expectancy if your winners are significantly larger than your losers." }},
+        ]
+      },
+    ]
+  },
+  {
+    id:3, title:"Fundamental Analysis", sub:"Weeks 10–13", color:"#6EC897", icon:"◇",
+    weeks:[
+      { week:10, title:"Valuing a Company", hours:12,
+        task:"Download a free DCF template from the internet. Pick one company you're interested in and fill it in using their most recent annual report numbers.",
+        topics:[
+          { name:"Intrinsic Value & DCF Analysis", tag:"Advanced", content:`
+            <div class="lesson-block">
+              <h3>What Is Intrinsic Value?</h3>
+              <p>Intrinsic value is what a company is actually worth — independent of its current market price. If a company's intrinsic value is higher than its market price, it may be undervalued (a potential buy).</p>
+              <h3>Discounted Cash Flow (DCF)</h3>
+              <p>The DCF is the most rigorous way to value a company. It estimates the present value of all future cash flows the business will generate.</p>
+              <div class="formula-box">
+                Intrinsic Value = Σ (Future Cash Flow ÷ (1 + Discount Rate)^Year)
+              </div>
+              <h3>The Three Inputs</h3>
+              <ul>
+                <li><strong>Free Cash Flow (FCF):</strong> Cash the business generates after capital expenditures</li>
+                <li><strong>Growth Rate:</strong> How fast will FCF grow? (Use conservative estimates)</li>
+                <li><strong>Discount Rate:</strong> The required return (usually 8-12%). Higher discount = lower value.</li>
+              </ul>
+              <div class="callout warn"><div class="callout-label">Garbage In, Garbage Out</div><p>DCF is only as good as your assumptions. Small changes in growth rate or discount rate cause huge swings in value. Always use conservative assumptions and check the margin of safety.</p></div>
+              <div class="callout tip"><div class="callout-label">Margin of Safety</div><p>Benjamin Graham's key concept: only buy when market price is 20-30%+ BELOW your calculated intrinsic value. This buffer protects you if your estimates are slightly wrong.</p></div>
+            </div>
+          `, quiz:{ q:"What is a 'margin of safety' in fundamental investing?", opts:["Setting a stop-loss below your entry price","Buying a stock only when the market price is significantly below your estimate of intrinsic value","Having cash in reserve in case the market crashes","Diversifying across 20+ stocks"], correct:1, explanation:"Margin of safety means buying a stock at a significant discount to your calculated intrinsic value. If you think a company is worth €100 and buy at €70, that €30 buffer protects you if your analysis is slightly off." }},
+
+          { name:"Growth vs Value Stocks", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>Value Stocks</h3>
+              <p>Value stocks trade at low valuations relative to their earnings, assets, or dividends. They're often in mature, slower-growing industries. The thesis: market has temporarily underpriced a good business.</p>
+              <ul>
+                <li>Low P/E (often below 15x)</li>
+                <li>May pay dividends</li>
+                <li>Slower revenue growth</li>
+                <li>Champions: Warren Buffett, Benjamin Graham</li>
+                <li>Examples: Banks, utilities, consumer staples</li>
+              </ul>
+              <h3>Growth Stocks</h3>
+              <p>Growth stocks are companies growing revenue and earnings fast, often reinvesting all profits back into the business. They trade at high valuations because investors are paying for future growth.</p>
+              <ul>
+                <li>High P/E (often 30-100x+)</li>
+                <li>Rarely pay dividends</li>
+                <li>High revenue growth (20%+)</li>
+                <li>Champions: Peter Lynch, William O'Neil, Philip Fisher</li>
+                <li>Examples: NVIDIA, cloud software companies, biotech</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">Which Is Better?</div><p>Neither is universally better. Value worked better in some decades; growth in others. Many investors blend both — finding growth companies at reasonable valuations (the GARP approach: Growth at a Reasonable Price).</p></div>
+            </div>
+          `, quiz:{ q:"A company has a P/E of 60 but is growing earnings at 50% per year. What kind of stock is this?", opts:["Classic value stock — low P/E is a buy signal","Growth stock — the high P/E may be justified by the rapid earnings growth","Overvalued — any P/E above 20 is too expensive","A dividend stock"], correct:1, explanation:"This is a growth stock. A high P/E can be justified if earnings growth is fast enough. With 50% growth, the company's earnings could double in under 2 years, making today's high P/E look cheap in hindsight." }},
+        ]
+      },
+      { week:11, title:"Earnings & Catalysts", hours:10,
+        task:"Pick 5 upcoming earnings reports from earningswhispers.com. Before each one, write down your prediction. After each report, compare actual results to consensus and analyze the price reaction.",
+        topics:[
+          { name:"How Earnings Move Stocks", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>The Earnings Season Cycle</h3>
+              <p>Every quarter, publicly traded companies report their financial results. Earnings season is the most volatile period in the market — stocks can move 5-20%+ in a single day based on results.</p>
+              <h3>Beat vs Miss vs In-Line</h3>
+              <ul>
+                <li><strong>Beat:</strong> Company reports EPS or revenue higher than analyst consensus estimate → usually stock goes up</li>
+                <li><strong>Miss:</strong> Reports below consensus → usually stock falls</li>
+                <li><strong>In-line:</strong> Meets expectations → often little reaction</li>
+              </ul>
+              <div class="callout warn"><div class="callout-label">The "Buy the Rumor, Sell the News" Trap</div><p>A stock can beat expectations and still FALL. Why? Because good news was already "priced in" — everyone expected the beat. What matters is whether results beat the WHISPER number (unofficial market expectation), not just the official consensus.</p></div>
+              <h3>Guidance Is Everything</h3>
+              <p>Past results matter, but forward guidance matters more. A company can report a great quarter but guide for slower growth next quarter — the stock will fall. Investors are always looking forward.</p>
+              <div class="callout tip"><div class="callout-label">Best Strategy for Beginners</div><p>Avoid holding individual stocks through earnings reports until you're experienced. Earnings gaps (10-20% overnight moves) can destroy your stop-loss strategy. Instead, enter AFTER earnings if the results were good.</p></div>
+            </div>
+          `, quiz:{ q:"A company beats EPS estimates by 20% but lowers its guidance for next quarter. What will the stock likely do?", opts:["Rise strongly on the EPS beat","Fall — forward guidance disappointed investors","Stay flat — the beat and miss cancel out","It's impossible to predict"], correct:1, explanation:"Markets are forward-looking. Even a strong EPS beat is overshadowed by weak guidance — investors are buying future earnings, not past ones. Lowered guidance = lower future expected earnings = lower stock price." }},
+        ]
+      },
+      { week:12, title:"Industries & Competitive Moats", hours:10,
+        task:"Choose one company you admire. Write a 1-page 'investment thesis' explaining what their competitive moat is, why it's durable, and what could threaten it.",
+        topics:[
+          { name:"Warren Buffett's Moat Concept", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>What Is an Economic Moat?</h3>
+              <p>A "moat" (like a castle moat) is a sustainable competitive advantage that protects a company's profits from competition. Companies with wide moats can maintain high profit margins for decades.</p>
+              <h3>The 5 Types of Moats</h3>
+              <ul>
+                <li><strong>Brand Power:</strong> People pay premiums for Coca-Cola, LVMH, Apple. Competitors can't easily replicate a century-old brand.</li>
+                <li><strong>Network Effects:</strong> The product gets better as more people use it. Facebook, Visa, Mastercard — each new user makes the network more valuable.</li>
+                <li><strong>Switching Costs:</strong> It's painful or expensive to switch to a competitor. Enterprise software (SAP, Oracle), banks, Adobe. Customers stay even if they're not thrilled.</li>
+                <li><strong>Cost Advantages:</strong> Company produces goods cheaper than any competitor due to scale, location, or unique processes. Amazon's logistics, ASML's monopoly on EUV machines.</li>
+                <li><strong>Regulatory Moats:</strong> Licenses, patents, government approvals that competitors can't easily obtain. Pharma, defense, utilities.</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">Buffett's Approach</div><p>"I look for economic castles protected by unbreachable moats." Buy wonderful businesses at fair prices, then hold them for decades as the moat compounds your returns.</p></div>
+              <div class="callout warn"><div class="callout-label">Moats Can Erode</div><p>Technology disruption is the greatest threat to moats. Kodak had a massive moat in film photography — digital cameras destroyed it in 10 years. Always ask: what technology could make this moat irrelevant?</p></div>
+            </div>
+          `, quiz:{ q:"Which of the following is the best example of a 'network effect' moat?", opts:["Coca-Cola's famous brand name","Visa's payment network — more merchants accept it because more consumers use it, and vice versa","ExxonMobil's oil reserves","A pharmaceutical company's 20-year drug patent"], correct:1, explanation:"Network effects occur when a product/service becomes more valuable as more people use it. Visa is a perfect example: merchants accept Visa because consumers carry it; consumers carry Visa because merchants accept it — a self-reinforcing cycle that's very hard to break." }},
+        ]
+      },
+      { week:13, title:"Macro Economics & Interest Rates", hours:8,
+        task:"Create a one-page 'macro checklist' you'll review every week. Include: Fed rate stance, inflation data, yield curve status, dollar strength, and which sectors are rotating into favor.",
+        topics:[
+          { name:"How Interest Rates Affect Stocks", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>The Fed's Role</h3>
+              <p>The Federal Reserve (or ECB in Europe) controls short-term interest rates. This is arguably the single most important variable for financial markets. When the Fed speaks, markets listen.</p>
+              <h3>Rate Hikes = Bad for Stocks (Generally)</h3>
+              <ul>
+                <li>Higher rates → corporations pay more interest on debt → lower profits</li>
+                <li>Higher rates → bonds become more attractive vs stocks → money flows to bonds</li>
+                <li>Higher rates → higher "discount rate" in DCF models → lower fair value for stocks (especially growth stocks)</li>
+                <li>Higher rates → consumers borrow less → slower economic growth</li>
+              </ul>
+              <h3>Rate Cuts = Good for Stocks (Generally)</h3>
+              <ul>
+                <li>Cheaper borrowing → companies invest more → higher growth → higher stock prices</li>
+                <li>Bonds yield less → money flows from bonds to stocks</li>
+                <li>Lower discount rates → growth stocks get a massive boost in valuation</li>
+              </ul>
+              <div class="callout example"><div class="callout-label">2022 Example</div><p>The Fed raised rates aggressively in 2022 to fight inflation. The S&P 500 fell ~20% and the NASDAQ (tech-heavy) fell ~35%. Growth stocks were crushed most because rising rates reduce the present value of future earnings.</p></div>
+              <h3>The Yield Curve</h3>
+              <p>The yield curve shows interest rates across different bond maturities. Normally, longer-term bonds have higher yields (upward sloping). When short-term rates exceed long-term rates (inverted curve), it historically predicts a recession 12-18 months ahead.</p>
+            </div>
+          `, quiz:{ q:"Why do rising interest rates hurt growth stocks more than value stocks?", opts:["Growth stocks have more debt","Growth stocks' value comes from future earnings, which are worth less when discounted at a higher rate","Growth stocks are in sectors that depend on borrowing","Value stocks have government protection"], correct:1, explanation:"Growth stocks derive most of their value from earnings expected far in the future. In a DCF model, a higher discount rate drastically reduces the present value of those distant earnings. Value stocks with current earnings are less affected." }},
+        ]
+      },
+    ]
+  },
+  {
+    id:4, title:"Trading Strategies", sub:"Weeks 14–19", color:"#C86E9C", icon:"◆",
+    weeks:[
+      { week:14, title:"Swing Trading", hours:12,
+        task:"Execute 10 swing trades over the next 2 weeks on your paper account. Log every trade in a spreadsheet: entry, stop, target, result, and what you learned.",
+        topics:[
+          { name:"Swing Trading Fundamentals", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>What Is Swing Trading?</h3>
+              <p>Swing trading involves holding positions for multiple days to a few weeks, capturing "swings" in price — the moves between support and resistance levels. You're not a day trader (too short) or a long-term investor (too long). You're capturing the intermediate moves.</p>
+              <h3>Why Swing Trading Works</h3>
+              <p>Markets don't move in straight lines. They zigzag — trending, then consolidating, then trending again. Swing traders exploit this by buying near support in uptrends and selling near resistance.</p>
+              <h3>Classic Swing Trading Setups</h3>
+              <ul>
+                <li><strong>Pullback to Moving Average:</strong> Stock in uptrend pulls back to 20 EMA, forms bullish candle, enter with stop below the EMA.</li>
+                <li><strong>Breakout from Consolidation:</strong> Stock consolidates for 2-4 weeks in a tight range, then breaks out above resistance on volume.</li>
+                <li><strong>Oversold Bounce:</strong> RSI drops below 30 at a key support level, look for reversal candle to enter long.</li>
+              </ul>
+              <div class="formula-box">
+                Entry: Breakout above resistance (or bounce at support)<br>
+                Stop: Below the recent swing low<br>
+                Target: Next resistance level (aim for 2:1 R/R minimum)
+              </div>
+              <div class="callout tip"><div class="callout-label">Timing the Market</div><p>Check the overall market direction first. 75% of stocks move with the market. If the S&P 500 is in a downtrend, most swing trades will fail. Only swing trade aggressively when the broader market is in an uptrend.</p></div>
+            </div>
+          `, quiz:{ q:"In swing trading, what is typically the FIRST thing you should check before entering any trade?", opts:["The company's latest earnings report","The overall direction of the broader market (S&P 500)","The CEO's Twitter activity","The stock's P/E ratio"], correct:1, explanation:"The broader market direction matters enormously for swing trades. ~75% of stocks move with the market — if the S&P 500 is falling, most individual stock longs will also fall. Always trade with the market, not against it." }},
+        ]
+      },
+      { week:15, title:"Momentum & Growth Trading", hours:12,
+        task:"Screen Finviz.com for stocks with: Revenue growth >25%, EPS growth >20%, up >20% in the last 3 months, above 50-day MA. Analyze the top 5 results.",
+        topics:[
+          { name:"The CANSLIM Method", tag:"Advanced", content:`
+            <div class="lesson-block">
+              <h3>O'Neil's CANSLIM System</h3>
+              <p>Developed by William O'Neil, CANSLIM is a growth stock investing system that has produced extraordinary results. It combines fundamental strength with technical timing. Each letter stands for a key criterion.</p>
+              <ul>
+                <li><strong>C — Current Earnings:</strong> EPS growth of 25%+ in the most recent quarter vs same quarter last year</li>
+                <li><strong>A — Annual Earnings:</strong> 3-5 year trend of 25%+ annual EPS growth</li>
+                <li><strong>N — New Product/Service/High:</strong> Something new driving growth — new product, new CEO, new industry condition. Stock making new 52-week highs (not stuck in a downtrend)</li>
+                <li><strong>S — Supply & Demand:</strong> Low share count (under 50M preferred). Institutional buying. Volume spikes on up days.</li>
+                <li><strong>L — Leader or Laggard:</strong> Only buy the top 1-2 stocks in a sector. Use Relative Strength to find them. Avoid laggards.</li>
+                <li><strong>I — Institutional Sponsorship:</strong> At least 3-5 top mutual funds or hedge funds buying the stock. Institutions drive 70%+ of volume.</li>
+                <li><strong>M — Market Direction:</strong> Only buy in confirmed uptrending markets. Cash out in bear markets.</li>
+              </ul>
+              <div class="callout warn"><div class="callout-label">Strict Rules Required</div><p>CANSLIM requires strict sell rules too: cut losses at 7-8% maximum. Never let a small loss become a big one. O'Neil says the biggest mistake investors make is not cutting losses quickly.</p></div>
+            </div>
+          `, quiz:{ q:"In CANSLIM, what does the 'M' stand for and why is it considered crucial?", opts:["Margin — companies need high profit margins","Market Direction — you only buy in uptrending markets, avoiding buying in downtrends","Management — the CEO must have a strong track record","Moat — the company needs a competitive advantage"], correct:1, explanation:"M = Market Direction. O'Neil found that 75% of stocks follow the general market direction. No matter how great the individual stock, buying during a bear market means fighting the tide. Only buy aggressively in a confirmed bull market." }},
+        ]
+      },
+      { week:16, title:"Day Trading Basics", hours:14,
+        task:"Paper day trade for 5 consecutive days. Set a rule: max 3 trades per day, stop trading if you're down 2% for the day. Track every trade and your emotions.",
+        topics:[
+          { name:"Day Trading Rules & Realities", tag:"Advanced", content:`
+            <div class="lesson-block">
+              <h3>What Is Day Trading?</h3>
+              <p>Day trading means opening and closing all positions within the same trading day — no overnight holds. You're trying to profit from intraday price fluctuations.</p>
+              <h3>The PDT Rule (US Markets)</h3>
+              <p>If you make 4+ day trades in a 5-business-day period on a US broker with under $25,000 in your account, you violate the Pattern Day Trader (PDT) rule and will be restricted. Most European brokers don't have this restriction.</p>
+              <h3>Key Day Trading Setups</h3>
+              <ul>
+                <li><strong>Opening Range Breakout:</strong> Mark the high and low of the first 15-30 minutes. Buy when price breaks above the opening range high with volume.</li>
+                <li><strong>VWAP Trading:</strong> VWAP (Volume Weighted Average Price) acts as the day's "fair value." Buy bounces above VWAP, sell below.</li>
+                <li><strong>Gap and Go:</strong> Stock gaps up 5%+ premarket on news. Buy the first pullback after the open, targeting the continuation of the gap.</li>
+              </ul>
+              <div class="callout warn"><div class="callout-label">Honest Warning</div><p>Studies show 70-80% of day traders lose money. The main reasons: transaction costs eat profits, emotional decision-making, and competing against professional algorithms. Don't day trade with significant capital until you've proven you can be consistently profitable on paper for 6+ months.</p></div>
+              <h3>Daily Loss Limit — Non-Negotiable</h3>
+              <p>Set a maximum daily loss (e.g., 2% of account). If you hit it, STOP for the day. Bad days happen. The goal is to limit damage so one bad day doesn't wipe out a week of gains.</p>
+            </div>
+          `, quiz:{ q:"What is the primary purpose of setting a daily loss limit when day trading?", opts:["To comply with broker regulations","To prevent one bad day from destroying a week's worth of profits and protect mental capital","To maximize tax efficiency","To ensure you only trade liquid stocks"], correct:1, explanation:"A daily loss limit stops you from revenge trading (making impulsive trades to recover losses) and protects your account from catastrophic single-day losses. Professional traders treat hitting the daily limit as a signal to stop — no exceptions." }},
+        ]
+      },
+      { week:17, title:"Options Trading — Part 1", hours:12,
+        task:"On your paper account, buy 1 call option and 1 put option on a stock you know well. Track the price changes daily and notice how the Greeks affect your position.",
+        topics:[
+          { name:"Options Basics: Calls & Puts", tag:"Advanced", content:`
+            <div class="lesson-block">
+              <h3>What Are Options?</h3>
+              <p>An option is a contract that gives you the RIGHT (but not obligation) to buy or sell a stock at a specific price (strike price) before a specific date (expiration).</p>
+              <h3>Call Options</h3>
+              <p>A call option gives you the right to BUY 100 shares at the strike price. You buy calls when you're BULLISH — expecting the stock to rise.</p>
+              <div class="callout example"><div class="callout-label">Call Example</div><p>Stock at €100. You buy a €110 call expiring in 30 days for €3 (premium). If stock rises to €125 before expiration, your €110 call is worth at least €15. You paid €3, now worth €15 = 400% gain. If stock stays below €110, your €3 is gone.</p></div>
+              <h3>Put Options</h3>
+              <p>A put option gives you the right to SELL 100 shares at the strike price. You buy puts when you're BEARISH — expecting the stock to fall. Puts are also used as insurance (hedging) on stocks you own.</p>
+              <div class="callout example"><div class="callout-label">Put Example</div><p>Stock at €100. You buy a €90 put for €2. If stock crashes to €70, your €90 put is worth at least €20. 10× your money. But if stock stays above €90, your €2 is gone.</p></div>
+              <h3>Key Advantage of Options</h3>
+              <p>Maximum loss is limited to the premium paid. You can never lose more than what you paid for the option.</p>
+              <div class="callout warn"><div class="callout-label">Time Decay Warning</div><p>Options lose value every day just from time passing (theta decay). You can be right about the direction but still lose money if the move happens too slowly. Timing matters enormously with options.</p></div>
+            </div>
+          `, quiz:{ q:"You buy a put option on a stock. When do you profit?", opts:["When the stock rises above the strike price","When the stock falls below the strike price","When the stock stays exactly at the strike price","When the company pays a dividend"], correct:1, explanation:"Put options increase in value when the underlying stock falls. You profit when the stock falls below your strike price. Put options are either used speculatively (betting on a decline) or as portfolio insurance (protecting against a fall in stocks you own)." }},
+
+          { name:"The Greeks — Delta, Theta, Vega", tag:"Advanced", content:`
+            <div class="lesson-block">
+              <h3>Why the Greeks Matter</h3>
+              <p>Options don't just move based on stock price. Multiple factors affect their value. The "Greeks" measure sensitivity to each factor.</p>
+              <h3>Delta (Δ) — Price Sensitivity</h3>
+              <p>Delta measures how much an option's price changes for every €1 move in the stock.</p>
+              <ul>
+                <li>Call options: Delta between 0 and 1 (positive)</li>
+                <li>Put options: Delta between -1 and 0 (negative)</li>
+                <li>At-the-money options: Delta ≈ 0.50</li>
+                <li>Deep in-the-money: Delta ≈ 1.0 (moves almost like the stock)</li>
+              </ul>
+              <div class="callout example"><div class="callout-label">Delta Example</div><p>You own a call with delta of 0.50. If the stock rises €2, your option rises approximately €1 (0.50 × €2).</p></div>
+              <h3>Theta (Θ) — Time Decay</h3>
+              <p>Theta is the amount an option loses in value each day just from time passing. This is why buying options is hard — you're fighting time decay every day.</p>
+              <div class="formula-box">Option value = Intrinsic Value + Time Value (which decays daily)</div>
+              <h3>Vega (V) — Volatility Sensitivity</h3>
+              <p>Vega measures sensitivity to changes in implied volatility (IV). When IV spikes (market panic), all option prices rise. When IV drops (calm market), option prices fall — even if the stock doesn't move.</p>
+              <div class="callout tip"><div class="callout-label">Practical Application</div><p>Buy options when implied volatility is LOW (they're cheap). Sell options when implied volatility is HIGH (they're expensive). Avoid buying options before earnings when IV is already elevated — you'll often lose even if the stock moves your way.</p></div>
+            </div>
+          `, quiz:{ q:"You buy a call option. Every day that passes, even if the stock doesn't move, your option loses some value. Which Greek describes this?", opts:["Delta","Gamma","Vega","Theta"], correct:3, explanation:"Theta is time decay — the daily erosion of an option's time value. As expiration approaches, options lose value faster (theta accelerates near expiration). This is why options buyers must be right about direction AND timing." }},
+        ]
+      },
+      { week:18, title:"Options Trading — Part 2", hours:12,
+        task:"Paper trade a covered call on a stock you own (or simulate ownership) and a cash-secured put on a stock you'd like to buy. Track the premium collected and outcome.",
+        topics:[
+          { name:"Covered Calls & Cash-Secured Puts", tag:"Advanced", content:`
+            <div class="lesson-block">
+              <h3>Covered Calls — Income Strategy</h3>
+              <p>A covered call means you own 100 shares of a stock AND sell a call option against those shares. You collect premium income. In exchange, you cap your upside.</p>
+              <div class="callout example"><div class="callout-label">Example</div><p>You own 100 ASML shares at €900. You sell a €950 call expiring in 30 days for €15 premium (€1,500 collected). If ASML stays below €950, you keep the €1,500 and your shares. If it rises above €950, your shares are "called away" at €950 — you still profit but miss gains above €950.</p></div>
+              <h3>Cash-Secured Puts — Income + Discount Buying</h3>
+              <p>You sell a put option and set aside cash to buy the shares if assigned. You either collect premium (if stock stays above strike) or buy shares at a discount.</p>
+              <div class="callout example"><div class="callout-label">Example</div><p>ASML is at €900. You sell a €860 put for €12 (€1,200 premium). If ASML stays above €860, you keep €1,200. If it falls below €860, you're "put" the shares — effectively buying at €860 - €12 = €848. You wanted to own it anyway, now you got a discount!</p></div>
+              <div class="callout tip"><div class="callout-label">The Wheel Strategy</div><p>Sell cash-secured puts until you get assigned (own the stock). Then sell covered calls until the stock is called away. Repeat. This generates consistent income from stocks you're happy to own.</p></div>
+            </div>
+          `, quiz:{ q:"You sell a covered call. The stock rallies 40% above your strike price. What happens to your position?", opts:["You profit 40% on the move","Your shares are called away at the strike price — you miss the gains above the strike","You lose money on the shares","Your option automatically rolls to a higher strike"], correct:1, explanation:"When you sell a covered call and the stock rises above the strike, the call buyer exercises their right to buy your shares at the strike price. You keep the premium and make money up to the strike, but miss all gains above it — that's the trade-off of the covered call strategy." }},
+        ]
+      },
+      { week:19, title:"Long-Term Investing Strategy", hours:8,
+        task:"Design your complete long-term portfolio: what percentage goes to index ETFs, individual stocks, bonds, and cash. Write down your investment horizon and goals.",
+        topics:[
+          { name:"Index Investing & Dollar-Cost Averaging", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>Why Index Funds Win Long-Term</h3>
+              <p>Over any 20-year period, a simple S&P 500 index fund has beaten 90%+ of actively managed funds. Why? Low fees, automatic diversification, and you never make emotional buy/sell decisions.</p>
+              <h3>Dollar-Cost Averaging (DCA)</h3>
+              <p>DCA means investing a fixed amount at regular intervals (e.g., €500 every month), regardless of market conditions. You buy more shares when prices are low, fewer when high.</p>
+              <div class="callout example"><div class="callout-label">DCA Example</div><p>Month 1: Price €100, buy 5 shares (€500). Month 2: Price €50 (crash!), buy 10 shares (€500). Month 3: Price €80, buy 6.25 shares (€500). Average cost: €500×3/21.25 = €70.59 per share. Current price: €80. You're already up 13%!</p></div>
+              <h3>The Best ETFs for Europeans</h3>
+              <ul>
+                <li><strong>VWRL / VWCE:</strong> Vanguard All World — global stocks in one fund, very low cost</li>
+                <li><strong>IUSQ / SWDA:</strong> iShares MSCI World — developed market stocks</li>
+                <li><strong>CSPX / SXR8:</strong> S&P 500 index — US only but historically strong</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">The Simple Portfolio</div><p>80-90% VWCE (global stocks) + 10-20% bonds or cash for most long-term investors. This simple two-fund portfolio has historically outperformed nearly all complex strategies. Add individual stocks only if you're willing to do real research.</p></div>
+            </div>
+          `, quiz:{ q:"Why has dollar-cost averaging (DCA) historically worked so well for long-term investors?", opts:["It guarantees you always buy at the lowest price","It removes the need to time the market and automatically buys more shares when prices are low","It avoids paying taxes on gains","It's required by European investment regulations"], correct:1, explanation:"DCA works because it removes market-timing emotion. You invest the same amount regardless of fear or greed. When markets fall (which scare most people away), you automatically buy more shares at lower prices — lowering your average cost and positioning you well for the eventual recovery." }},
+        ]
+      },
+    ]
+  },
+  {
+    id:5, title:"Psychology", sub:"Weeks 20–22", color:"#9C6EC8", icon:"○",
+    weeks:[
+      { week:20, title:"The Mental Game", hours:10,
+        task:"Write your personal Trading Manifesto: 10 rules you commit to following no matter what. Print it out and put it where you trade.",
+        topics:[
+          { name:"Trading Psychology & Emotional Pitfalls", tag:"Critical", content:`
+            <div class="lesson-block">
+              <h3>Why Most Traders Fail Psychologically</h3>
+              <p>The market is specifically designed (through the behavior of millions of participants) to trigger your worst instincts. It makes you buy high (when everyone is excited) and sell low (when everyone is panicking).</p>
+              <h3>FOMO — Fear of Missing Out</h3>
+              <p>You see a stock up 40% and buy it near the top because you're afraid of missing more gains. Then it reverses and you lose money. FOMO buying almost always ends badly.</p>
+              <div class="callout warn"><div class="callout-label">The FOMO Fix</div><p>There will ALWAYS be another trade. Missing one opportunity is meaningless. Keep a watchlist and wait for your specific setup. Chasing is the #1 way beginners lose money.</p></div>
+              <h3>Revenge Trading</h3>
+              <p>You have a losing trade. Your ego can't accept it. You immediately make another trade to "win back" the loss — impulsively and without your usual analysis. The second trade is almost always worse.</p>
+              <h3>Overconfidence After Winning Streaks</h3>
+              <p>After 5 winning trades, you feel invincible. You increase size, take lower-quality setups, or ignore risk management. Then one bad trade wipes out weeks of gains.</p>
+              <div class="callout tip"><div class="callout-label">Mark Douglas's Insight</div><p>"The best traders have a mindset that expects random distribution of wins and losses. They don't get euphoric on wins or devastated by losses. They focus purely on executing their process correctly." — Trading in the Zone</p></div>
+              <h3>The Process Focus</h3>
+              <p>Judge yourself on whether you followed your rules — not on the outcome. A trade that follows your rules perfectly but loses money is a GOOD trade. A trade that ignores your rules but wins is a BAD trade. Focus on the process, the outcomes will follow.</p>
+            </div>
+          `, quiz:{ q:"You just had 5 consecutive winning trades. Your confidence is high. What should you be most careful about?", opts:["Missing more winning trades","Overconfidence leading to larger position sizes, lower-quality setups, or ignoring risk management","Not having enough trades open","Being too patient and missing opportunities"], correct:1, explanation:"Winning streaks breed overconfidence — one of trading's most dangerous mental states. Professional traders actually become MORE cautious after wins, knowing the market will eventually humble them. The worst losses often come right after the best winning streaks." }},
+        ]
+      },
+      { week:21, title:"Building Your Trading Journal", hours:8,
+        task:"Set up your trading journal (spreadsheet or Tradervue). Enter your last 20 paper trades. Calculate your win rate, average winner, average loser, and total P&L.",
+        topics:[
+          { name:"The Trading Journal System", tag:"Critical", content:`
+            <div class="lesson-block">
+              <h3>Why the Journal Is Non-Negotiable</h3>
+              <p>Every professional trader keeps a detailed journal. It's the only way to separate what you THINK you're doing from what you're ACTUALLY doing. Without data, you're flying blind.</p>
+              <h3>What to Log for Every Trade</h3>
+              <ul>
+                <li>Date and time of entry/exit</li>
+                <li>Stock ticker, entry price, exit price, position size</li>
+                <li>Stop-loss level and profit target</li>
+                <li>Setup type (e.g., "breakout from bull flag")</li>
+                <li>Reason for entry — in one sentence</li>
+                <li>Result: profit/loss in € and %</li>
+                <li>Emotional state: 1-10 before/during/after</li>
+                <li>What you did well / what you'd do differently</li>
+              </ul>
+              <h3>Weekly Review Process</h3>
+              <ul>
+                <li>Review all trades from the week</li>
+                <li>Calculate win rate, avg win, avg loss, profit factor</li>
+                <li>Look for patterns in your mistakes (same emotional error? Same setup type failing?)</li>
+                <li>Set 1-3 specific improvements for next week</li>
+              </ul>
+              <div class="formula-box">
+                Profit Factor = Gross Profit ÷ Gross Loss<br>
+                Above 1.5 = good. Above 2.0 = excellent.
+              </div>
+              <div class="callout tip"><div class="callout-label">Screenshot Everything</div><p>Take a screenshot of every chart at entry AND exit. When you review later, you'll see patterns in your setups — both what works and what doesn't — that you'd never notice without visual evidence.</p></div>
+            </div>
+          `, quiz:{ q:"Your profit factor is 0.8. What does this tell you?", opts:["Your strategy is highly profitable","For every €1 you make in gross profit, you lose €1.25 — you're losing money overall","Your win rate is 80%","You need to take fewer trades"], correct:1, explanation:"Profit Factor = Gross Profit / Gross Loss. A profit factor of 0.8 means you're losing €0.80 in gross profit for every €1 in gross losses — overall unprofitable. You need a profit factor above 1.0 to be profitable, above 1.5 for a solid strategy." }},
+        ]
+      },
+      { week:22, title:"Developing Your Edge", hours:12,
+        task:"Backtest your primary strategy on 6 months of historical data. Calculate expectancy per trade. If positive, great — continue refining. If negative, identify what's broken.",
+        topics:[
+          { name:"Finding and Testing Your Edge", tag:"Critical", content:`
+            <div class="lesson-block">
+              <h3>What Is a Trading Edge?</h3>
+              <p>An edge is a statistically demonstrable advantage — your strategy makes more money than it loses over a large sample of trades. Without an edge, you're essentially gambling.</p>
+              <h3>How to Calculate Expectancy</h3>
+              <div class="formula-box">
+                Expectancy = (Win Rate × Avg Win) - (Loss Rate × Avg Loss)<br><br>
+                Example: 50% win rate, €200 avg win, €100 avg loss:<br>
+                (0.50 × €200) - (0.50 × €100) = €100 - €50 = €50 per trade
+              </div>
+              <h3>Your Setup Must Be Specific</h3>
+              <p>Edges exist in specific, narrow contexts — not broadly. "I buy good stocks" is not an edge. "I buy stocks breaking out of 6-week cup and handle bases with RS above 90 and volume 200%+ above average when the market is in a confirmed uptrend" — that is a specific setup you can test.</p>
+              <div class="callout tip"><div class="callout-label">Van Tharp's R-Multiple</div><p>Measure all trades in units of R (initial risk). A 2R win means you made 2× your risk. Track your average R-multiple across trades. Any positive average R over 50+ trades = edge.</p></div>
+              <h3>Sample Size Matters</h3>
+              <p>You need at least 50-100 trades to have statistical confidence in your results. 10 winning trades proves nothing — it could be luck. 80 trades with consistent positive expectancy is real evidence of an edge.</p>
+              <div class="callout warn"><div class="callout-label">Patience</div><p>Most traders take years to find and refine a genuine edge. The traders who make it long-term treat trading as a serious craft requiring constant study, journaling, and improvement. There are no shortcuts.</p></div>
+            </div>
+          `, quiz:{ q:"You've tested your strategy on 15 trades and all were winners. Do you have a proven edge?", opts:["Yes — 100% win rate is definitive proof","No — 15 trades is far too small a sample size to distinguish skill from luck","Yes — if you can repeat it 3 more times","No — you need to win 100 consecutive trades"], correct:1, explanation:"15 trades is a far too small sample to prove anything. Statistically, even a random strategy could get 15 consecutive wins by chance. You need a minimum of 50-100+ trades to have any statistical confidence that your results represent a genuine edge." }},
+        ]
+      },
+    ]
+  },
+  {
+    id:6, title:"Going Live", sub:"Weeks 23–26", color:"#C8896E", icon:"★",
+    weeks:[
+      { week:23, title:"Transitioning to Real Money", hours:8,
+        task:"Fund your real account with a small amount you're comfortable losing (€500-€2,000 max to start). Make your first 3 real trades at minimum size. Focus entirely on execution, not profit.",
+        topics:[
+          { name:"Starting Small With Real Money", tag:"Critical", content:`
+            <div class="lesson-block">
+              <h3>The Psychology of Real Money</h3>
+              <p>Even experienced paper traders are often shocked by how differently they behave when real money is at stake. Fear and greed become visceral. Your hands may literally shake. This is normal — and why starting small is critical.</p>
+              <h3>How Much to Start With?</h3>
+              <ul>
+                <li>Use only money you can afford to COMPLETELY lose without affecting your life</li>
+                <li>Start with €500-€2,000 maximum — most beginners should be in this range</li>
+                <li>Scale up only after proving consistency over 3-6 months of real trading</li>
+                <li>Never put your emergency fund, rent money, or money needed within 5 years into stocks</li>
+              </ul>
+              <div class="callout warn"><div class="callout-label">The Real Money Transition</div><p>Expect your first real-money period to be humbling, even if you were profitable on paper. Real money amplifies every emotion. Your job in the first month is to follow your rules, not to make money. Profitability comes later, after discipline is established.</p></div>
+              <h3>Tax Basics for Investors (Netherlands)</h3>
+              <ul>
+                <li>Netherlands Box 3 tax: annual wealth tax on assets above threshold (currently €57,000 per person in 2024)</li>
+                <li>Short-term trading gains in NL are generally taxed as Box 3 income (if investing is not your main occupation)</li>
+                <li>Keep records of all trades — your broker provides annual statements</li>
+                <li>Consult a tax advisor if your trading becomes substantial</li>
+              </ul>
+            </div>
+          `, quiz:{ q:"You've been profitable paper trading for 6 months. You start real trading and immediately lose 3 trades. What is the most likely explanation?", opts:["Your strategy stopped working","Real money triggers emotions (fear, hesitation, overtrading) that didn't exist when paper trading","You need a different broker","You should go back to paper trading permanently"], correct:1, explanation:"The transition from paper to real trading is notoriously difficult. Real money activates deep psychological responses — you hesitate on entries, take profits too early out of fear, hold losers too long hoping to avoid realizing the loss. These emotions don't exist in paper trading. Starting small and focusing on process (not profit) is the solution." }},
+        ]
+      },
+      { week:24, title:"Advanced Risk & Portfolio Management", hours:10,
+        task:"Review your full portfolio (or simulated one). Calculate your total market exposure and correlation. Set explicit rules for max positions, max sector exposure, and daily/weekly loss limits.",
+        topics:[
+          { name:"Portfolio-Level Risk Management", tag:"Advanced", content:`
+            <div class="lesson-block">
+              <h3>Beyond Single-Trade Risk</h3>
+              <p>Managing risk per trade is essential, but you also need to manage risk at the portfolio level. 5 correlated positions can create much more risk than your per-trade calculations suggest.</p>
+              <h3>Correlation Risk</h3>
+              <p>If you own 5 tech stocks, they'll all fall together in a tech selloff. Even with 1% risk per trade, a coordinated selloff could hit all 5 positions simultaneously — a 5% portfolio hit in one day.</p>
+              <h3>Maximum Concurrent Positions</h3>
+              <ul>
+                <li>Beginners: max 3-5 positions at once until consistent</li>
+                <li>Intermediate: 5-10 positions across different sectors</li>
+                <li>Advanced: 10-20 positions with proper hedges in place</li>
+              </ul>
+              <h3>Daily & Weekly Loss Limits</h3>
+              <ul>
+                <li>Daily limit: If down 2-3% of account in one day → stop trading that day</li>
+                <li>Weekly limit: If down 5% in one week → reduce size or stop until next week</li>
+                <li>Monthly limit: If down 10% in one month → take 2 weeks off, review everything</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">Drawdown Recovery Math</div><p>A 20% loss requires a 25% gain to get back to breakeven. A 50% loss requires 100% gain. This is why protecting capital is more important than chasing gains — the math of recovery is brutal.</p></div>
+              <div class="formula-box">
+                To recover from a X% loss, you need:<br>
+                Recovery needed = X / (100 - X) × 100%<br>
+                50% loss → needs 100% gain to recover
+              </div>
+            </div>
+          `, quiz:{ q:"Your account falls 25%. What percentage gain do you now need to get back to breakeven?", opts:["25%","30%","33%","50%"], correct:2, explanation:"If you lose 25%, you're at 75% of your starting value. To get back to 100%, you need: (100/75) - 1 = 33.3% gain. This illustrates why protecting capital is more valuable than chasing big gains — losses require disproportionately larger gains to recover." }},
+        ]
+      },
+      { week:25, title:"Advanced Strategies & Specialization", hours:12,
+        task:"Choose your primary trading style (swing, growth investing, options income, or day trading). Write a 1-page 'specialization plan' for the next 90 days focused exclusively on that approach.",
+        topics:[
+          { name:"Choosing Your Specialization", tag:"Advanced", content:`
+            <div class="lesson-block">
+              <h3>Why Specialization Beats Generalization</h3>
+              <p>Trying to be good at everything — day trading, options, growth investing, value investing — means being excellent at nothing. The most successful traders pick one approach and master it deeply over years.</p>
+              <h3>The Main Paths</h3>
+              <ul>
+                <li><strong>Long-Term Value/Growth Investing:</strong> Low stress, quarterly research, buy and hold for years. Best for most people. Buffett's approach.</li>
+                <li><strong>Swing Trading:</strong> Part-time friendly. 1-3 hours per day. Good for people with jobs. Returns can be excellent with patience.</li>
+                <li><strong>Options Income (Wheel/Covered Calls):</strong> Consistent income generation. Lower risk than directional options. Good for people with larger accounts.</li>
+                <li><strong>Day Trading:</strong> Most demanding. Requires 6+ hours daily. High failure rate. Only for full-time commitment.</li>
+                <li><strong>Algorithmic Trading:</strong> Automated strategies using code. Requires programming skills. Can work 24/7 without you.</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">How to Choose</div><p>Pick based on (1) your available time, (2) your personality (patient investor vs active trader?), and (3) your risk tolerance. Don't choose day trading because you think it's exciting — choose it only if you're willing to make it a full-time profession.</p></div>
+              <div class="callout warn"><div class="callout-label">The 90-Day Rule</div><p>Once you choose a specialty, commit to ONLY that approach for 90 days. No switching when it gets hard. You need sufficient data to know if it's the strategy or your execution that's failing.</p></div>
+            </div>
+          `, quiz:{ q:"You have a full-time job and can only trade for 1-2 hours per day. Which approach is MOST suitable?", opts:["Day trading — you can do it on your lunch break","Long-term investing or swing trading — these don't require constant monitoring","Options scalping","High-frequency algorithmic trading"], correct:1, explanation:"Day trading requires constant focus for 6+ hours during market hours. With a full-time job, this is impossible without sacrificing your career. Long-term investing (check monthly) or swing trading (analyze evenings, orders execute during day) are far more compatible with a regular job." }},
+        ]
+      },
+      { week:26, title:"Your Ongoing System", hours:8,
+        task:"Write your complete Trading Business Plan: your strategy, risk rules, daily routine, weekly review process, and 1/3/5-year goals. This is your trading constitution.",
+        topics:[
+          { name:"Building Your Ongoing Routine", tag:"Essential", content:`
+            <div class="lesson-block">
+              <h3>Congratulations — Week 26!</h3>
+              <p>You've covered everything from stock market basics to advanced options strategies. Now the real work begins — consistent application and continuous improvement over months and years.</p>
+              <h3>The Weekly Routine of a Serious Trader</h3>
+              <ul>
+                <li><strong>Sunday (1-2 hours):</strong> Review the week's trades in journal. Update watchlist. Check macro calendar for upcoming week (Fed meetings, earnings, economic data). Set your trading plan for the week.</li>
+                <li><strong>Daily pre-market (30 min):</strong> Check overnight news. Review your watchlist. Know your plan before the market opens.</li>
+                <li><strong>During market:</strong> Execute your plan. No impulsive decisions.</li>
+                <li><strong>After close (15 min):</strong> Log all trades. Note what happened and why.</li>
+              </ul>
+              <h3>Continuing Education</h3>
+              <ul>
+                <li>Re-read your best trading books every year — you'll understand them differently</li>
+                <li>Follow great traders and investors (not gurus selling courses)</li>
+                <li>Podcasts: We Study Billionaires, Chat with Traders, Acquired</li>
+                <li>Read annual reports of companies you own</li>
+                <li>Track your annual performance vs S&P 500 honestly</li>
+              </ul>
+              <div class="callout tip"><div class="callout-label">The Long Game</div><p>The greatest traders and investors all say the same thing: their first 3-5 years were mostly learning (and losing) experiences. Compounding wealth through markets is a 10-20+ year endeavor. Stay patient, keep improving, and the results will come.</p></div>
+              <div class="callout warn"><div class="callout-label">Your Benchmark</div><p>If you can't consistently beat the S&P 500 index over 3+ years, consider whether the time spent on active trading is worth it versus simply investing in low-cost index ETFs. Most professional fund managers can't beat the index. There's no shame in being an index investor — it's actually the smart move for most people.</p></div>
+            </div>
+          `, quiz:{ q:"After 1 year of active trading, you've matched the S&P 500 return (net of fees and time). How should you view this result?", opts:["Excellent — matching professionals is a great achievement","You've basically underperformed — index investing would have given the same return with zero time and effort","Poor — you should have doubled the index","Great — now double down and trade more actively"], correct:1, explanation:"Matching the index through active trading is essentially a failure when you consider the time invested. You spent hundreds of hours to achieve what an index ETF would have done automatically with zero effort. Only continue active trading if you're consistently and significantly beating the index over 3+ year periods." }},
+        ]
+      },
+    ]
+  },
+];
+
+// ===================== STATE =====================
+let currentView = 'home';
+let currentWeek = null;
+let completed = new Set(JSON.parse(localStorage.getItem('ta_completed') || '[]'));
+let sidebarOpen = false;
+
+function save() { localStorage.setItem('ta_completed', JSON.stringify([...completed])); }
+
+function getPhaseColor(weekNum) {
+  for (const p of phases) {
+    for (const w of p.weeks) {
+      if (w.week === weekNum) return p.color;
+    }
+  }
+  return '#C8A96E';
+}
+
+function getWeekData(weekNum) {
+  for (const p of phases) {
+    for (const w of p.weeks) {
+      if (w.week === weekNum) return { phase: p, week: w };
+    }
+  }
+  return null;
+}
+
+// ===================== RENDER SIDEBAR =====================
+function renderSidebar() {
+  const totalWeeks = 26;
+  const pct = Math.round((completed.size / totalWeeks) * 100);
+  let html = `
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Trading Academy</div>
+      <div class="sidebar-title" style="cursor:pointer" onclick="navigate('home')">Complete Course</div>
+      <div class="sidebar-progress">
+        <div class="sidebar-progress-track"><div class="sidebar-progress-fill" style="width:${pct}%"></div></div>
+        <div class="sidebar-progress-label"><span>${completed.size}/26 weeks</span><span>${pct}%</span></div>
+      </div>
+    </div>
+  `;
+  for (const p of phases) {
+    const isOpen = currentWeek && p.weeks.some(w => w.week === currentWeek?.week);
+    html += `
+      <div class="phase-section">
+        <div class="phase-heading ${isOpen ? 'open' : ''}" onclick="this.classList.toggle('open'); this.nextElementSibling.style.display = this.classList.contains('open') ? 'block' : 'none'">
+          <span class="phase-heading-icon" style="color:${p.color}">${p.icon}</span>
+          <span class="phase-heading-text" style="color:${isOpen ? p.color : ''}">${p.title}</span>
+          <span class="phase-heading-chevron">▼</span>
+        </div>
+        <div class="phase-weeks" style="display:${isOpen ? 'block' : 'none'}">
+          ${p.weeks.map(w => `
+            <div class="week-link ${currentWeek && currentWeek.week === w.week ? 'active' : ''}" onclick="navigate('week', ${w.week})">
+              <div class="week-link-num ${completed.has(w.week) ? 'done' : ''}" style="${completed.has(w.week) ? `background:${p.color};border-color:${p.color}` : ''}">
+                ${completed.has(w.week) ? '✓' : w.week}
+              </div>
+              <div class="week-link-name">${w.title}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  document.getElementById('sidebar').innerHTML = html;
+}
+
+// ===================== RENDER MAIN =====================
+function renderMain() {
+  if (currentView === 'home') {
+    renderHome();
+  } else if (currentView === 'week') {
+    renderWeek();
+  }
+}
+
+function renderHome() {
+  const totalHours = phases.reduce((s, p) => s + p.weeks.reduce((ss, w) => ss + w.hours, 0), 0);
+  let html = `<div class="home-page">
+    <div class="hero-eyebrow">Complete Trading Education</div>
+    <h1>Trading Academy</h1>
+    <p class="hero-sub">Everything you need to go from complete beginner to confident, profitable trader. 26 weeks of structured learning with full lessons, interactive quizzes, and practical tasks.</p>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">Phases</div></div>
+      <div class="stat"><div class="stat-val">26</div><div class="stat-lbl">Weeks</div></div>
+      <div class="stat"><div class="stat-val">${totalHours}</div><div class="stat-lbl">Study Hours</div></div>
+      <div class="stat"><div class="stat-val">${phases.reduce((s,p)=>s+p.weeks.reduce((ss,w)=>ss+w.topics.length,0),0)}</div><div class="stat-lbl">Full Lessons</div></div>
+      <div class="stat"><div class="stat-val">${completed.size}/26</div><div class="stat-lbl">Completed</div></div>
+    </div>
+    <div style="margin-bottom:24px; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:5px; color:var(--text4); text-transform:uppercase">Choose a Phase to Begin</div>
+    <div class="phases-grid">
+      ${phases.map(p => `
+        <div class="phase-card" onclick="navigate('week', ${p.weeks[0].week})" style="border-top: 3px solid ${p.color}30">
+          <div class="phase-card-icon" style="color:${p.color}">${p.icon}</div>
+          <div class="phase-card-num" style="color:${p.color}">Phase ${p.id} · ${p.sub}</div>
+          <div class="phase-card-title">${p.title}</div>
+          <div class="phase-card-weeks">${p.weeks.length} weeks · ~${p.weeks.reduce((s,w)=>s+w.hours,0)} hours · ${p.weeks.reduce((s,w)=>s+w.topics.length,0)} lessons</div>
+        </div>
+      `).join('')}
+    </div>
+  </div>`;
+  document.getElementById('main').innerHTML = html;
+  window.scrollTo(0,0);
+}
+
+function renderWeek() {
+  const { phase, week } = currentWeek;
+  const color = phase.color;
+  // Find prev/next week
+  let allWeeks = [];
+  for (const p of phases) for (const w of p.weeks) allWeeks.push(w.week);
+  const idx = allWeeks.indexOf(week.week);
+  const prevWeek = idx > 0 ? allWeeks[idx-1] : null;
+  const nextWeek = idx < allWeeks.length-1 ? allWeeks[idx+1] : null;
+  const isDone = completed.has(week.week);
+
+  let html = `<div class="week-page">
+    <div class="week-breadcrumb" onclick="navigate('home')">← Back to Overview</div>
+    <div class="week-eyebrow" style="color:${color}">Phase ${phase.id}: ${phase.title} &nbsp;·&nbsp; ${phase.sub}</div>
+    <h1 class="week-title">Week ${week.week}: ${week.title}</h1>
+    <div class="week-meta">
+      <span>⏱ ~${week.hours} study hours</span>
+      <span>📚 ${week.topics.length} lessons</span>
+      ${isDone ? `<span style="color:${color}">✓ Completed</span>` : ''}
+    </div>
+    <div class="topics-section-title">Lessons — Click to Learn</div>
+    <div class="topic-cards">
+      ${week.topics.map((t, i) => `
+        <div class="topic-card" id="tc-${week.week}-${i}">
+          <div class="topic-card-header" onclick="toggleTopic('tc-${week.week}-${i}')">
+            <div class="topic-card-icon" style="background:${color}20; color:${color}">${i+1}</div>
+            <div class="topic-card-name">${t.name}</div>
+            <div class="topic-card-tag" style="background:${color}">${t.tag}</div>
+            <div class="topic-card-chevron">▼</div>
+          </div>
+          <div class="topic-body">
+            <div class="topic-content">
+              ${t.content}
+              <div class="quiz-section">
+                <div class="quiz-title" style="color:${color}">Knowledge Check</div>
+                <div class="quiz-q">${t.quiz.q}</div>
+                <div class="quiz-options">
+                  ${t.quiz.opts.map((o, oi) => `
+                    <div class="quiz-opt" id="qopt-${week.week}-${i}-${oi}" onclick="answerQuiz(${week.week}, ${i}, ${oi}, ${t.quiz.correct}, '${t.quiz.explanation.replace(/'/g,"\\'")}')">
+                      ${String.fromCharCode(65+oi)}. ${o}
+                    </div>
+                  `).join('')}
+                </div>
+                <div class="quiz-feedback" id="qfb-${week.week}-${i}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="task-box" style="background:${color}15; border:1px solid ${color}40">
+      <div class="task-label" style="color:${color}">Weekly Practical Task</div>
+      <div class="task-text">${week.task}</div>
+    </div>
+    <button class="complete-btn" id="complete-btn" onclick="toggleComplete(${week.week})" style="color:${isDone ? '#0A0A0B' : color}; border-color:${color}; background:${isDone ? color : 'transparent'}">
+      ${isDone ? '✓ Completed' : 'Mark Week as Complete'}
+    </button>
+    <div class="week-nav">
+      ${prevWeek ? `<div class="nav-btn" onclick="navigate('week', ${prevWeek})">← Week ${prevWeek}</div>` : '<div></div>'}
+      ${nextWeek ? `<div class="nav-btn" onclick="navigate('week', ${nextWeek})">Week ${nextWeek} →</div>` : '<div></div>'}
+    </div>
+  </div>`;
+  document.getElementById('main').innerHTML = html;
+  window.scrollTo(0,0);
+}
+
+// ===================== ACTIONS =====================
+function toggleTopic(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+function answerQuiz(weekNum, topicIdx, selectedIdx, correctIdx, explanation) {
+  // Disable all options
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById(`qopt-${weekNum}-${topicIdx}-${i}`);
+    if (el) {
+      el.style.pointerEvents = 'none';
+      if (i === correctIdx) el.classList.add('correct');
+      else if (i === selectedIdx && selectedIdx !== correctIdx) el.classList.add('wrong');
+    }
+  }
+  const fb = document.getElementById(`qfb-${weekNum}-${topicIdx}`);
+  if (fb) {
+    const isCorrect = selectedIdx === correctIdx;
+    fb.className = `quiz-feedback show ${isCorrect ? 'good' : 'bad'}`;
+    fb.textContent = (isCorrect ? '✓ Correct! ' : '✗ Not quite. ') + explanation;
+  }
+}
+
+function toggleComplete(weekNum) {
+  if (completed.has(weekNum)) {
+    completed.delete(weekNum);
+  } else {
+    completed.add(weekNum);
+  }
+  save();
+  renderSidebar();
+  renderMain();
+}
+
+function navigate(view, weekNum) {
+  if (view === 'home') {
+    currentView = 'home';
+    currentWeek = null;
+  } else if (view === 'week') {
+    currentView = 'week';
+    currentWeek = getWeekData(weekNum);
+  }
+  renderSidebar();
+  renderMain();
+  if (sidebarOpen) toggleSidebar();
+}
+
+function toggleSidebar() {
+  sidebarOpen = !sidebarOpen;
+  document.getElementById('sidebar').classList.toggle('open', sidebarOpen);
+  document.getElementById('overlay').classList.toggle('show', sidebarOpen);
+}
+
+// Init
+renderSidebar();
+renderMain();
+</script>
+</body>
+</html>
