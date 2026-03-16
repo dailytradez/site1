@@ -1751,42 +1751,7 @@ renderMain();
 </html>
 
 /* 
-/* TASK BOX */
-.task-box { border-radius: 4px; padding: 20px 24px; margin-top: 32px; }
-.task-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px; }
-.task-text { font-size: 16px; color: var(--text); line-height: 1.7; }
 
-/* COMPLETE BTN */
-.complete-btn { margin-top: 32px; padding: 14px 32px; border-radius: 3px; border: 1px solid; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; background: transparent; }
-.complete-btn:hover { opacity: 0.8; }
-
-/* NAV ARROWS */
-.week-nav { display: flex; gap: 12px; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); }
-.nav-btn { flex: 1; padding: 14px 20px; border: 1px solid var(--border2); border-radius: 3px; background: var(--bg2); cursor: pointer; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text3); transition: all 0.2s; text-align: center; }
-.nav-btn:hover { background: var(--bg3); color: var(--text2); border-color: var(--text4); }
-
-/* MOBILE */
-.menu-toggle { display: none; position: fixed; top: 16px; left: 16px; z-index: 200; background: var(--bg2); border: 1px solid var(--border2); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); }
-.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 99; }
-
-@media (max-width: 768px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); }
-  .main { margin-left: 0; }
-  .menu-toggle { display: block; }
-  .sidebar-overlay.show { display: block; }
-  .home-page, .week-page { padding: 60px 20px 80px; }
-  .stats-row { gap: 28px; }
-  .phases-grid { grid-template-columns: 1fr; }
-}
-
-/* Scrollbar */
-.sidebar::-webkit-scrollbar { width: 4px; }
-.sidebar::-webkit-scrollbar-track { background: transparent; }
-.sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-</style>
-</head>
-<body>
 
 <button class="menu-toggle" onclick="toggleSidebar()">☰ MENU</button>
 <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
